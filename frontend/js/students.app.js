@@ -95,6 +95,20 @@ document.addEventListener('DOMContentLoaded', function() {
             addActiveClass(targetId);
         }, 100);
     }
+
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    
+    function toggleSidebar(e) {
+        e.preventDefault();
+        document.body.classList.toggle('sb-collapsed');
+        
+        const isCollapsed = document.body.classList.contains('sb-collapsed');
+        sidebarToggle.setAttribute('aria-expanded', !isCollapsed);
+    }
+    
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', toggleSidebar);
+    }
 });
 
 
