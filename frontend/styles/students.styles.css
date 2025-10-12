@@ -1,4 +1,9 @@
+html {
+    scroll-behavior: smooth;
+}
+
 body {
+    --sb-width: 250px;
     display: flex;
     flex-direction: row;
     margin: 0;
@@ -7,7 +12,9 @@ body {
 }
 
 #sidebar {
-    flex: 0 0 280px; /* Don't grow, don't shrink, fixed 220px width */
+    display: flex;
+    flex-direction:  column;
+    flex: 0 0 var(--sb-width);
     height: 100vh;
     background: linear-gradient(180deg, #1a1a1a 0%, #000000 100%);
     color: #ffd700;
@@ -15,65 +22,53 @@ body {
     box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
     z-index: 1000;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    animation: slideInLeft 0.6s ease-out;
     position: sticky;
     top: 0;
 }
 
-/* Sidebar entrance animation */
-@keyframes slideInLeft {
-    from {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+#sidebar nav a .nav-text {
+    opacity: 1;
+    max-width: 200px;
+    overflow: hidden;
+    transition: opacity 0.3s ease-out, max-width 0.3s ease-out; 
+    transition-delay: 0.2s; 
 }
 
-/* Icon styles */
-.nav-icon {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    margin-right: 12px;
-    vertical-align: middle;
-    transition: transform 0.3s ease;
+body.sb-collapsed {
+    --sb-width: 40px;
 }
 
-
-#sidebar nav a:hover .nav-icon {
-    transform: scale(1.2) rotate(5deg);
+.sb-collapsed #sidebar nav a .nav-text {
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: opacity 0.2s ease-out, max-width 0.2s ease-out;
+    transition-delay: 0s;
 }
 
-/* Floating animation for specific icons */
-.nav-icon.float {
-    animation: float 3s ease-in-out infinite;
+aside .bx-chevrons-left {
+    rotate: 0deg;
+    transition: rotate 0.8s ease;
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-3px); }
-}
-
-#sidebar.collapsed {
-    width: 60px;
+.sb-collapsed aside .bx-chevrons-left {
+    rotate: 180deg;
+    transition: rotate 0.8s ease;
 }
 
 .sidebar-header {
     display: flex;
+    height: 40px;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     padding: 20px;
-    /*background: rgba(255, 215, 0, 0.1);*/
     text-align: center;
 }
 
 #sidebar-logo {
     margin: 0;
     color: #ffd700;
-    font-size: 1.8em; /* Increased from 1.3em to 2em */
+    font-size: 1.8em; 
     font-weight: 600;
     width:45px;
     height:45px;
@@ -81,20 +76,24 @@ body {
     animation: goldGlow 2s ease-in-out infinite alternate;
 }
 
-
-
-
-/* Golden glowing text animation */
 @keyframes goldGlow {
     from { text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.5); }
     to { text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.8); }
 }
 
-/* Navigation list animations */
+#sidebar nav {
+    display: flex;
+    flex-direction: column;
+    flex:1;
+}
+
 #sidebar nav ul {
+    display: flex;
+    flex-direction: column;
+    flex: 1; 
     list-style: none;
     padding: 0;
-    margin: 20px 0;
+    margin: 0;
 }
 
 #sidebar nav li {
@@ -102,12 +101,6 @@ body {
     opacity: 0;
     animation: fadeInUp 0.6s ease-out forwards;
 }
-
-/* Staggered animation for each nav item */
-#sidebar nav li:nth-child(1) { animation-delay: 0.1s; }
-#sidebar nav li:nth-child(2) { animation-delay: 0.2s; }
-#sidebar nav li:nth-child(3) { animation-delay: 0.3s; }
-#sidebar nav li:nth-child(4) { animation-delay: 0.4s; }
 
 @keyframes fadeInUp {
     from {
@@ -120,54 +113,14 @@ body {
     }
 }
 
-/* Ripple effect on click */
-#sidebar nav a {
-    position: relative;
-    overflow: hidden;
-}
-
-#sidebar nav a::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-#sidebar nav a:active::after {
-    width: 300px;
-    height: 300px;
-}
-
-.icon { 
-    width: 1.25rem; 
-    height: 1.25rem; 
-    color: gold; 
-}
-
-#main-content {
-    flex: 1; /* Take up remaining space */
-    min-height: 100vh;
-    overflow-y: auto;
-}
-
-#sidebar nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-#sidebar nav li {
-    margin: 0;
-}
+#sidebar nav li:last-child {
+    margin-top: auto;
+    margin-bottom: 20px;
+    }
 
 #sidebar nav a {
-    display: block;
+    display: flex;
+    align-items: center;
     padding: 18px 25px;
     color: #ffd700;
     text-decoration: none;
@@ -178,16 +131,9 @@ body {
     position: relative;
     overflow: hidden;
     transform: translateX(0);
+    white-space:nowrap ;
 }
 
-/* Default SVG styling */
-#sidebar nav a svg {
-    stroke: #ffd700;
-    fill: none;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Hover animations */
 #sidebar nav a:hover {
     background: rgba(255, 215, 0, 0.1);
     border-left: 4px solid #ffd700;
@@ -195,15 +141,7 @@ body {
     color: #ffffff;
     box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
 }
-#sidebar nav a:hover svg {
-    stroke: #ffffff; /* Brighter gold instead of white */
-    fill: none;
-    filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.6)); /* Glowing effect */
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-
-/* Sliding background effect */
 #sidebar nav a::before {
     content: '';
     position: absolute;
@@ -220,67 +158,31 @@ body {
     left: 100%;
 }
 
-/* Active link pulse animation */
 #sidebar nav a.active {
     background: rgba(255, 215, 0, 0.2);
-    border-left-color: #ffd700;
-    animation: goldPulse 2s infinite;
+    border-left-color: #ffd700;    
 }
 
-@keyframes goldPulse {
-    0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+#sidebar nav a:hover .nav-icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.nav-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    vertical-align: middle;
+    transition: transform 0.3s ease;
 }
 
 
-.sidebar-toggle {
-    top: 15px;
-    background: rgba(255, 215, 0, 0);
-    color: gold;
-    border: none;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    cursor: pointer;
+#main-content {
+    flex: 1; 
+    min-height: 100vh;
+    overflow-y: auto;
 }
 
-.sidebar-toggle:hover {
-    color: white;
-    border: white;
-    background-color: rgba(255, 215, 0, 0.1)
-}
-
-#sidebar.collapsed nav a span {
-    display: none;
-}
-
-#sidebar .dropdown {
-    position: relative;
-}
-
-#sidebar .dropdown-content {
-    display: none;
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-#sidebar .dropdown:hover .dropdown-content {
-    display: block;
-}
-
-#sidebar .dropdown-content a {
-    padding-left: 40px;
-    font-size: 0.9em;
-}
-
-/* ===== SINGLE-PAGE APP STYLES ===== */
-
-/* Smooth scrolling for the entire page */
-html {
-    scroll-behavior: smooth;
-}
-
-/* Section styling */
 main section {
     min-height: 100vh;
     padding: 80px 40px 40px;
@@ -288,7 +190,6 @@ main section {
     flex-direction: column;
 }
 
-/* Home section */
 #home {
     background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #333333 100%);
     color: #ffd700;
@@ -324,7 +225,7 @@ main section {
     z-index: 1;
 }
 
-/* Tutors section */
+
 #tutors {
     background: linear-gradient(145deg, #1a1a1a 0%, #000000 100%);
     color: #ffd700;
@@ -358,7 +259,7 @@ main section {
     z-index: 1;
 }
 
-/* Booking section */
+
 #booking {
     background: linear-gradient(145deg, #000000 0%, #1a1a1a 100%);
     color: #ffd700;
@@ -390,7 +291,7 @@ main section {
     z-index: 1;
 }
 
-/* Contact section */
+
 #contact {
     background: linear-gradient(145deg, #1a1a1a 0%, #000000 100%);
     color: #ffd700;
@@ -424,18 +325,7 @@ main section {
     z-index: 1;
 }
 
-/* Active navigation highlighting */
-#sidebar nav a.active {
-    background: rgba(255, 215, 0, 0.2) !important;
-    border-left-color: #ffd700 !important;
-    transform: translateX(5px) !important;
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4) !important;
-    color: #ffd700 !important; /* Keep gold color for active state */
-}
 
-/* Enhanced active state with indicator - REMOVED */
-
-/* Ripple effect styles */
 .ripple {
     position: absolute;
     border-radius: 50%;
@@ -452,15 +342,6 @@ main section {
     }
 }
 
-/* Smooth transitions for active state changes */
-#sidebar nav a {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                background-color 0.2s ease,
-                transform 0.3s ease,
-                box-shadow 0.3s ease !important;
-}
-
-/* Footer */
 footer {
     background: #000000;
     color: #ffd700;
