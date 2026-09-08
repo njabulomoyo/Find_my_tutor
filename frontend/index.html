@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Find My Tutor | Grambling State University</title>
+    <meta
+      name="description"
+      content="Find My Tutor helps students connect with qualified tutors for online and in-person learning."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <a class="brand" href="#home" aria-label="Find My Tutor home"><span class="brand-mark">G</span><span>Find My<br /><strong>Tutor</strong></span></a>
+        <button class="collapse-toggle" id="collapse-toggle" type="button" aria-label="Collapse navigation" aria-expanded="true">←</button>
+      </div>
+      <div class="sidebar-label">Student Success Center</div> 
+      <nav class="nav-links" aria-label="Main navigation">
+        <a class="active" href="#home"><svg class="nav-icon" aria-hidden="true" viewBox="3 3 18 18"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z" /></svg><b>Home</b></a>
+        <a href="#tutors"><svg class="nav-icon" aria-hidden="true" viewBox="3 5 18 14"><circle cx="9" cy="8" r="3" /><path d="M3 19c0-3 2.7-5 6-5s6 2 6 5M16 5.5a3 3 0 0 1 0 5.8M17 14c2.4.4 4 2 4 5" /></svg><b>Find a tutor</b></a>
+        <a href="#booking"><svg class="nav-icon" aria-hidden="true" viewBox="3 3 18 18"><rect x="3" y="5" width="18" height="16" rx="1" /><path d="M16 3v4M8 3v4M3 10h18M7 14h3M14 14h3M7 17h3" /></svg><b>Book a session</b></a>
+        <a href="#contact"><svg class="nav-icon" aria-hidden="true" viewBox="3 5 18 14"><rect x="3" y="5" width="18" height="14" rx="1" /><path d="m4 7 8 6 8-6" /></svg><b>Contact us</b></a>
+      </nav>
+    </aside>
+
+    <main class="page-content">
+      <section class="hero" id="home">
+        <div class="hero-image-placeholder" role="img" aria-label="Placeholder for a Grambling State University campus photo"><span>Campus photo placeholder</span></div>
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+          <div class="hero-text">
+            <p class="eyebrow">Grambling State University</p>
+            <h1>Your goals are<br /><em>worth the work.</em></h1>
+            <p class="lead">A little support can turn a difficult subject into a confident next step. Meet the Student Success Center tutors ready to help you thrive.</p>
+            <a class="btn btn-primary" href="#tutors">Meet your tutors <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="mission-pullquote"><span class="quote-mark">“</span><p>We create a learning environment where every student can develop the skills and knowledge necessary to achieve academic success.</p><span class="quote-source">Student Success Center mission</span></div>
+        </div>
+      </section>
+
+      <section class="section" id="tutors">
+        <div class="container">
+          <div class="section-heading section-heading-row"><div><p class="eyebrow">Your support team</p><h2>Find your person.</h2></div><p class="section-intro">Browse our tutors by their areas of expertise. Open a profile to see subjects and availability.</p></div>
+          <div id="tutor-status" class="status-message" aria-live="polite"></div>
+          <div class="tutor-grid" id="tutor-grid"></div>
+        </div>
+      </section>
+
+      <section class="section booking-section" id="booking">
+        <div class="container booking-layout">
+          <div class="booking-copy"><p class="eyebrow">Make a plan</p><h2>Book time to move forward.</h2><p>Tell us where you need support and we’ll help you connect with the right tutor. Your student details are already on file.</p><div class="booking-step"><span>01</span><p>Choose a subject and tutor.</p></div><div class="booking-step"><span>02</span><p>Pick a preferred date.</p></div><div class="booking-step"><span>03</span><p>Arrive ready to learn.</p></div></div>
+          <form class="booking-form" id="booking-form">
+            <div class="form-heading"><span class="form-kicker">Appointment request</span><h3>Set up your session</h3></div>
+            <label for="subject">Subject you need help with<select id="subject" required><option value="">Choose a subject</option></select></label>
+            <label for="booking-tutor">Preferred tutor<select id="booking-tutor" required><option value="">Choose a tutor</option></select></label>
+            <label for="date">Preferred date<input id="date" type="date" required /></label>
+            <label for="message">What would you like help with? <span>(optional)</span><textarea id="message" rows="3" placeholder="Share a little context before your session..."></textarea></label>
+            <button class="btn btn-primary full" type="submit">Request appointment <span aria-hidden="true">→</span></button>
+            <p class="form-note" id="booking-status" aria-live="polite">This is a request only. The center will confirm your appointment.</p>
+          </form>
+        </div>
+      </section>
+
+      <footer class="footer" id="contact">
+        <div class="container footer-inner"><div><p class="eyebrow">Stay connected</p><h2>Student Success Center</h2><p>Here when you need a place to begin.</p></div><div class="contact-details"><div><span>Email</span><strong>success@grambling.edu</strong></div><div><span>Phone</span><strong>(318) 555-0147</strong></div><div><span>Office hours</span><strong>Mon–Fri · 8:00 AM–5:00 PM</strong></div></div></div>
+      </footer>
+    </main>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
