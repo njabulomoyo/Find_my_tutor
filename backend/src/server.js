@@ -1,11 +1,15 @@
 const express = require('express');
+const path = require('path');
 const tutors = require('./data/tutors');
 const { filterTutors } = require('./tutorService');
+const { validateBooking } = require('./bookingService');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5050;
+const bookings = [];
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../../frontend')));
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
@@ -36,6 +40,33 @@ app.get('/api/tutors/:id', (req, res) => {
   }
 
   return res.json({ tutor });
+});
+
+app.post('/api/bookings', (req, res) => {
+  try {
+    const validBooking = validateBooking(req.body);
+    const tutor = tutors.find((item) => item.id === validBooking.tutorId);
+
+    if (!tutor) {
+      return res.status(400).json({ message: 'Selected tutor is not available.' });
+    }
+
+    const createdBooking = {
+      id: bookings.length + 1,
+      ...validBooking,
+      tutorName: tutor.name,
+      createdAt: new Date().toISOString(),
+    };
+
+    bookings.push(createdBooking);
+
+    return res.status(201).json({
+      message: 'Booking request submitted successfully.',
+      booking: createdBooking,
+    });
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
 });
 
 app.listen(PORT, () => {

@@ -36,6 +36,8 @@ npm install
 npm run dev
 ```
 
+The backend runs on `http://localhost:5050` by default.
+
 ## Run the frontend
 
 Open `frontend/index.html` in a browser.

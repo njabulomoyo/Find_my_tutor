@@ -57,10 +57,13 @@
           <div class="booking-copy"><p class="eyebrow">Make a plan</p><h2>Book time to move forward.</h2><p>Tell us where you need support and we’ll help you connect with the right tutor. Your student details are already on file.</p><div class="booking-step"><span>01</span><p>Choose a subject and tutor.</p></div><div class="booking-step"><span>02</span><p>Pick a preferred date.</p></div><div class="booking-step"><span>03</span><p>Arrive ready to learn.</p></div></div>
           <form class="booking-form" id="booking-form">
             <div class="form-heading"><span class="form-kicker">Appointment request</span><h3>Set up your session</h3></div>
-            <label for="subject">Subject you need help with<select id="subject" required><option value="">Choose a subject</option></select></label>
-            <label for="booking-tutor">Preferred tutor<select id="booking-tutor" required><option value="">Choose a tutor</option></select></label>
-            <label for="date">Preferred date<input id="date" type="date" required /></label>
-            <label for="message">What would you like help with? <span>(optional)</span><textarea id="message" rows="3" placeholder="Share a little context before your session..."></textarea></label>
+            <label for="student-name">Student name<input id="student-name" name="studentName" type="text" placeholder="Your full name" required /></label>
+            <label for="student-email">Email address<input id="student-email" name="studentEmail" type="email" placeholder="name@grambling.edu" required /></label>
+            <label for="subject">Subject you need help with<select id="subject" name="subject" required><option value="">Choose a subject</option></select></label>
+            <label for="booking-tutor">Preferred tutor<select id="booking-tutor" name="tutor" required><option value="">Choose a tutor</option></select></label>
+            <label for="date">Preferred date<input id="date" name="preferredDate" type="date" required /></label>
+            <label for="time">Preferred time<input id="time" name="preferredTime" type="time" required /></label>
+            <label for="message">What would you like help with? <span>(optional)</span><textarea id="message" name="message" rows="3" placeholder="Share a little context before your session..."></textarea></label>
             <button class="btn btn-primary full" type="submit">Request appointment <span aria-hidden="true">→</span></button>
             <p class="form-note" id="booking-status" aria-live="polite">This is a request only. The center will confirm your appointment.</p>
           </form>
