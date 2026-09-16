@@ -19,10 +19,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.title = `${tutor.name} | Find My Tutor`;
     document.getElementById('profile-avatar').textContent = tutor.name.split(' ').slice(0, 2).map((part) => part[0]).join('').toUpperCase();
     document.getElementById('profile-name').textContent = tutor.name;
-    document.getElementById('profile-subject').textContent = tutor.subject;
-    document.getElementById('profile-rating').textContent = `${tutor.rating} / 5`;
-    document.getElementById('profile-price').textContent = `$${tutor.pricePerHour} / hour`;
-    document.getElementById('profile-experience').textContent = tutor.experience;
+    document.getElementById('profile-major').textContent = tutor.major;
+    document.getElementById('profile-classification').textContent = tutor.classification;
+    document.getElementById('profile-subjects').textContent = tutor.subjects.join(', ');
+    document.getElementById('profile-availability').textContent = tutor.availability.join(' · ');
     document.getElementById('booking-link').href = `./index.html?tutor=${encodeURIComponent(tutor.id)}#booking`;
     status.hidden = true;
     content.hidden = false;

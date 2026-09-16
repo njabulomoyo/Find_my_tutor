@@ -1,51 +1,51 @@
 const tutors = [
   {
     id: 1,
-    name: 'Amar Singh',
-    subject: 'Physics',
-    rating: 4.9,
-    pricePerHour: 220,
-    experience: '6 years'
+    name: 'Adriel Dube',
+    major: 'Physics',
+    classification: 'Senior',
+    subjects: ['Physics', 'Calculus', 'General Science'],
+    availability: ['Mon 2:00 PM - 5:00 PM', 'Wed 10:00 AM - 1:00 PM']
   },
   {
     id: 2,
-    name: 'Lerato Khumalo',
-    subject: 'English',
-    rating: 4.8,
-    pricePerHour: 180,
-    experience: '5 years'
+    name: 'Enoch Owoade',
+    major: 'English',
+    classification: 'Senior',
+    subjects: ['English Composition', 'Academic Writing', 'Literature'],
+    availability: ['Tue 9:00 AM - 12:00 PM', 'Thu 1:00 PM - 4:00 PM']
   },
   {
     id: 3,
-    name: 'Johan Pretorius',
-    subject: 'Computer Science',
-    rating: 5.0,
-    pricePerHour: 260,
-    experience: '8 years'
+    name: 'Maitaishe Mangudhla',
+    major: 'Computer Science',
+    classification: 'Graduate',
+    subjects: ['Computer Science', 'Programming', 'Data Structures'],
+    availability: ['Mon 10:00 AM - 1:00 PM', 'Fri 2:00 PM - 5:00 PM']
   },
   {
     id: 4,
-    name: 'Nandi Mokoena',
-    subject: 'Mathematics',
-    rating: 4.9,
-    pricePerHour: 220,
-    experience: '7 years'
+    name: 'Njabulo Moyo',
+    major: 'Mathematics',
+    classification: 'Senior',
+    subjects: ['Mathematics', 'Calculus', 'Algebra'],
+    availability: ['Tue 2:00 PM - 5:00 PM', 'Thu 9:00 AM - 12:00 PM']
   },
   {
     id: 5,
-    name: 'Thabo Dlamini',
-    subject: 'Chemistry',
-    rating: 4.8,
-    pricePerHour: 200,
-    experience: '4 years'
+    name: 'Iyanuoluwa Fagbamila',
+    major: 'Chemistry',
+    classification: 'Junior',
+    subjects: ['Chemistry', 'General Science', 'Biology'],
+    availability: ['Mon 9:00 AM - 12:00 PM', 'Wed 2:00 PM - 5:00 PM']
   },
   {
     id: 6,
-    name: 'Maya Naidoo',
-    subject: 'Academic Writing',
-    rating: 4.9,
-    pricePerHour: 190,
-    experience: '6 years'
+    name: 'Stecy Chirinda',
+    major: 'English',
+    classification: 'Graduate',
+    subjects: ['Academic Writing', 'English Composition', 'Literature'],
+    availability: ['Wed 9:00 AM - 12:00 PM', 'Fri 1:00 PM - 4:00 PM']
   }
 ];
 

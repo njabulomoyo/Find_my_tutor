@@ -1,10 +1,10 @@
 const fallbackTutors = [
-  { id: 1, name: 'Amar Singh', subject: 'Physics', subjects: ['Physics', 'Calculus', 'General Science'], availability: ['Mon 2:00 PM - 5:00 PM', 'Wed 10:00 AM - 1:00 PM'] },
-  { id: 2, name: 'Lerato Khumalo', subject: 'English', subjects: ['English Composition', 'Academic Writing', 'Literature'], availability: ['Tue 9:00 AM - 12:00 PM', 'Thu 1:00 PM - 4:00 PM'] },
-  { id: 3, name: 'Johan Pretorius', subject: 'Computer Science', subjects: ['Computer Science', 'Programming', 'Data Structures'], availability: ['Mon 10:00 AM - 1:00 PM', 'Fri 2:00 PM - 5:00 PM'] },
-  { id: 4, name: 'Nandi Mokoena', subject: 'Mathematics', subjects: ['Mathematics', 'Calculus', 'Algebra'], availability: ['Tue 2:00 PM - 5:00 PM', 'Thu 9:00 AM - 12:00 PM'] },
-  { id: 5, name: 'Thabo Dlamini', subject: 'Chemistry', subjects: ['Chemistry', 'General Science', 'Biology'], availability: ['Mon 9:00 AM - 12:00 PM', 'Wed 2:00 PM - 5:00 PM'] },
-  { id: 6, name: 'Maya Naidoo', subject: 'Academic Writing', subjects: ['Academic Writing', 'English Composition', 'Literature'], availability: ['Wed 9:00 AM - 12:00 PM', 'Fri 1:00 PM - 4:00 PM'] }
+  { id: 1, name: 'Adriel Dube', major: 'Physics', classification: 'Senior', subjects: ['Physics', 'Calculus', 'General Science'], availability: ['Mon 2:00 PM - 5:00 PM', 'Wed 10:00 AM - 1:00 PM'] },
+  { id: 2, name: 'Enoch Owoade', major: 'English', classification: 'Senior', subjects: ['English Composition', 'Academic Writing', 'Literature'], availability: ['Tue 9:00 AM - 12:00 PM', 'Thu 1:00 PM - 4:00 PM'] },
+  { id: 3, name: 'Maitaishe Mangudhla', major: 'Computer Science', classification: 'Graduate', subjects: ['Computer Science', 'Programming', 'Data Structures'], availability: ['Mon 10:00 AM - 1:00 PM', 'Fri 2:00 PM - 5:00 PM'] },
+  { id: 4, name: 'Njabulo Moyo', major: 'Mathematics', classification: 'Senior', subjects: ['Mathematics', 'Calculus', 'Algebra'], availability: ['Tue 2:00 PM - 5:00 PM', 'Thu 9:00 AM - 12:00 PM'] },
+  { id: 5, name: 'Iyanuoluwa Fagbamila', major: 'Chemistry', classification: 'Junior', subjects: ['Chemistry', 'General Science', 'Biology'], availability: ['Mon 9:00 AM - 12:00 PM', 'Wed 2:00 PM - 5:00 PM'] },
+  { id: 6, name: 'Stecy Chirinda', major: 'English', classification: 'Graduate', subjects: ['Academic Writing', 'English Composition', 'Literature'], availability: ['Wed 9:00 AM - 12:00 PM', 'Fri 1:00 PM - 4:00 PM'] }
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,14 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
   let tutors = [];
 
-  function normalizeTutor(tutor, index) {
-    return {
-      ...tutor,
-      subjects: tutor.subjects || [tutor.subject],
-      availability: tutor.availability || fallbackTutors[index % fallbackTutors.length].availability
-    };
-  }
-
   function initials(name) {
     return name.split(' ').slice(0, 2).map((part) => part[0]).join('').toUpperCase();
   }
@@ -40,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <article class="tutor-card">
         <div class="avatar">${initials(tutor.name)}</div>
         <h3>${tutor.name}</h3>
-        <p class="specialization">${tutor.subject}</p>
+        <p class="specialization">${tutor.major} · ${tutor.classification}</p>
         <a class="profile-link" href="./profile.html?id=${encodeURIComponent(tutor.id)}">View tutor profile <span aria-hidden="true">→</span></a>
         <details>
           <summary>View profile details</summary>
@@ -74,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('http://localhost:5050/api/tutors');
       if (!response.ok) throw new Error('Tutor API unavailable');
       const data = await response.json();
-      tutors = (data.tutors || []).map(normalizeTutor);
+      tutors = data.tutors || [];
     } catch (error) {
       tutors = fallbackTutors;
       tutorStatus.textContent = 'Showing the current Student Success Center tutor team.';

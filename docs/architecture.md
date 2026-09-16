@@ -36,7 +36,7 @@ The backend provides the API that powers frontend functionality.
 
 Core entities:
 - User
-- Tutor
+- Tutor: name, major, classification, subjects, and availability schedule
 - Student
 - Booking
 - Review

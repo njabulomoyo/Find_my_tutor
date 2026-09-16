@@ -59,6 +59,47 @@ function all(db, sql, params = []) {
   });
 }
 
+function parseTutor(tutor) {
+  return {
+    ...tutor,
+    subjects: JSON.parse(tutor.subjects),
+    availability: JSON.parse(tutor.availability),
+  };
+}
+
+async function getTableColumns(db, tableName) {
+  const columns = await all(db, `PRAGMA table_info(${tableName})`);
+  return columns.map((column) => column.name);
+}
+
+async function migrateTutorsTable(db) {
+  const columns = await getTableColumns(db, 'tutors');
+  const hasCurrentSchema = ['major', 'classification', 'subjects', 'availability']
+    .every((column) => columns.includes(column));
+
+  if (hasCurrentSchema) {
+    return;
+  }
+
+  await run(db, 'ALTER TABLE tutors RENAME TO tutors_legacy');
+  await run(db, `
+    CREATE TABLE tutors (
+      id INTEGER PRIMARY KEY,
+      name TEXT NOT NULL,
+      major TEXT NOT NULL,
+      classification TEXT NOT NULL,
+      subjects TEXT NOT NULL,
+      availability TEXT NOT NULL
+    )
+  `);
+  await run(db, `
+    INSERT INTO tutors (id, name, major, classification, subjects, availability)
+    SELECT id, name, subject, 'Unspecified', json_array(subject), json_array()
+    FROM tutors_legacy
+  `);
+  await run(db, 'DROP TABLE tutors_legacy');
+}
+
 async function initializeDatabase(filePath = DB_PATH) {
   const db = await openDatabase(filePath);
 
@@ -67,12 +108,14 @@ async function initializeDatabase(filePath = DB_PATH) {
       CREATE TABLE IF NOT EXISTS tutors (
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
-        subject TEXT NOT NULL,
-        rating REAL,
-        pricePerHour INTEGER,
-        experience TEXT
+        major TEXT NOT NULL,
+        classification TEXT NOT NULL,
+        subjects TEXT NOT NULL,
+        availability TEXT NOT NULL
       )
     `);
+
+    await migrateTutorsTable(db);
 
     await run(db, `
       CREATE TABLE IF NOT EXISTS bookings (
@@ -94,15 +137,15 @@ async function initializeDatabase(filePath = DB_PATH) {
     if (Number(row.count) === 0) {
       for (const tutor of tutorsSeed) {
         await run(db, `
-          INSERT INTO tutors (id, name, subject, rating, pricePerHour, experience)
+          INSERT INTO tutors (id, name, major, classification, subjects, availability)
           VALUES (?, ?, ?, ?, ?, ?)
         `, [
           tutor.id,
           tutor.name,
-          tutor.subject,
-          tutor.rating,
-          tutor.pricePerHour,
-          tutor.experience,
+          tutor.major,
+          tutor.classification,
+          JSON.stringify(tutor.subjects),
+          JSON.stringify(tutor.availability),
         ]);
       }
     }
@@ -118,7 +161,8 @@ async function getTutors(filePath = DB_PATH) {
   const db = await openDatabase(filePath);
 
   try {
-    return await all(db, 'SELECT * FROM tutors ORDER BY id ASC');
+    const tutors = await all(db, 'SELECT id, name, major, classification, subjects, availability FROM tutors ORDER BY id ASC');
+    return tutors.map(parseTutor);
   } finally {
     db.close();
   }
@@ -128,7 +172,8 @@ async function getTutorById(filePath = DB_PATH, tutorId) {
   const db = await openDatabase(filePath);
 
   try {
-    return await get(db, 'SELECT * FROM tutors WHERE id = ?', [Number(tutorId)]);
+    const tutor = await get(db, 'SELECT id, name, major, classification, subjects, availability FROM tutors WHERE id = ?', [Number(tutorId)]);
+    return tutor ? parseTutor(tutor) : tutor;
   } finally {
     db.close();
   }
