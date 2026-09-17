@@ -1,5 +1,5 @@
 node_modules/
 .DS_Store
-backend/*.db
-backend/*.sqlite
-backend/*.sqlite3
+backend/**/*.db
+backend/**/*.sqlite
+backend/**/*.sqlite3
