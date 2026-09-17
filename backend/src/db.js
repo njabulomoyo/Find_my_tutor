@@ -1,71 +1,7 @@
-const fs = require('node:fs');
-const path = require('node:path');
-const sqlite3 = require('sqlite3').verbose();
 const tutorsSeed = require('./data/tutors');
-
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data', 'find-my-tutor.db');
-
-function openDatabase(filePath = DB_PATH) {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-
-  return new Promise((resolve, reject) => {
-    const db = new sqlite3.Database(filePath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (error) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      resolve(db);
-    });
-  });
-}
-
-function run(db, sql, params = []) {
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, function onRun(error) {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      resolve({ id: this.lastID, changes: this.changes });
-    });
-  });
-}
-
-function get(db, sql, params = []) {
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (error, row) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      resolve(row);
-    });
-  });
-}
-
-function all(db, sql, params = []) {
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (error, rows) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      resolve(rows);
-    });
-  });
-}
-
-function parseTutor(tutor) {
-  return {
-    ...tutor,
-    subjects: JSON.parse(tutor.subjects),
-    availability: JSON.parse(tutor.availability),
-  };
-}
+const { DB_PATH, openDatabase, run, get, all } = require('./db/connection');
+const tutorRepository = require('./db/tutorRepository');
+const bookingRepository = require('./db/bookingRepository');
 
 async function getTableColumns(db, tableName) {
   const columns = await all(db, `PRAGMA table_info(${tableName})`);
@@ -157,70 +93,20 @@ async function initializeDatabase(filePath = DB_PATH) {
   }
 }
 
-async function getTutors(filePath = DB_PATH) {
-  const db = await openDatabase(filePath);
-
-  try {
-    const tutors = await all(db, 'SELECT id, name, major, classification, subjects, availability FROM tutors ORDER BY id ASC');
-    return tutors.map(parseTutor);
-  } finally {
-    db.close();
-  }
+function getTutors(filePath = DB_PATH) {
+  return tutorRepository.findAll(filePath);
 }
 
-async function getTutorById(filePath = DB_PATH, tutorId) {
-  const db = await openDatabase(filePath);
-
-  try {
-    const tutor = await get(db, 'SELECT id, name, major, classification, subjects, availability FROM tutors WHERE id = ?', [Number(tutorId)]);
-    return tutor ? parseTutor(tutor) : tutor;
-  } finally {
-    db.close();
-  }
+function getTutorById(filePath = DB_PATH, tutorId) {
+  return tutorRepository.findById(filePath, tutorId);
 }
 
-async function getBookings(filePath = DB_PATH) {
-  const db = await openDatabase(filePath);
-
-  try {
-    return await all(db, 'SELECT * FROM bookings ORDER BY id ASC');
-  } finally {
-    db.close();
-  }
+function getBookings(filePath = DB_PATH) {
+  return bookingRepository.findAll(filePath);
 }
 
-async function createBooking(filePath = DB_PATH, booking) {
-  const db = await openDatabase(filePath);
-
-  try {
-    const result = await run(db, `
-      INSERT INTO bookings (
-        studentName,
-        email,
-        tutorId,
-        preferredDate,
-        preferredTime,
-        subject,
-        message,
-        tutorName,
-        createdAt
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [
-      booking.studentName,
-      booking.email,
-      Number(booking.tutorId),
-      booking.preferredDate,
-      booking.preferredTime || '',
-      booking.subject,
-      booking.message || '',
-      booking.tutorName || '',
-      new Date().toISOString(),
-    ]);
-
-    return await get(db, 'SELECT * FROM bookings WHERE id = ?', [result.id]);
-  } finally {
-    db.close();
-  }
+function createBooking(filePath = DB_PATH, booking) {
+  return bookingRepository.create(filePath, booking);
 }
 
 module.exports = {
