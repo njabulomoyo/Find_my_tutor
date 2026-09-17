@@ -27,7 +27,14 @@ test('persists tutor and booking data in SQLite', async () => {
   const tutor = await getTutorById(dbPath, 1);
   assert.equal(tutor.major, 'Physics');
   assert.equal(tutor.classification, 'Senior');
-  assert.deepEqual(tutor.subjects, ['Physics', 'Calculus', 'General Science']);
+  assert.deepEqual(tutor.subjects, [
+    'Pre-Calculus',
+    'Calculus I',
+    'Probability and Statistics',
+    'Data Structures and Algorithms',
+    'Computer Science I',
+    'Computer Science II',
+  ]);
   assert.deepEqual(tutor.availability, ['Mon 2:00 PM - 5:00 PM', 'Wed 10:00 AM - 1:00 PM']);
 
   const booking = await createBooking(dbPath, {
@@ -85,6 +92,7 @@ test('migrates legacy tutor fields to the current tutor model', async () => {
     assert.deepEqual(tutor, {
       id: 1,
       name: 'Legacy Tutor',
+      image: null,
       major: 'History',
       classification: 'Unspecified',
       subjects: ['History'],

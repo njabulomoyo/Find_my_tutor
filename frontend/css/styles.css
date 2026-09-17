@@ -86,11 +86,12 @@ h2 { margin: 0; font-size: clamp(2.9rem, 5vw, 5rem); line-height: .95; }
 .tutor-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .tutor-card { padding: 25px; background: var(--white); border: 1px solid var(--line); box-shadow: 0 8px 20px rgba(32, 27, 15, .03); }
 .avatar { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 38px; background: var(--black); color: var(--gold); font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+.tutor-image { display: block; width: 100%; height: 190px; margin-bottom: 22px; object-fit: cover; }
+.tutor-image-fallback { width: 100%; height: 190px; margin-bottom: 22px; font-size: 3rem; }
 .tutor-card h3 { margin: 0; font-size: 1.45rem; letter-spacing: -.04em; }
-.tutor-card .specialization { margin: 4px 0 18px; color: var(--muted); font-size: .9rem; }
-.profile-link { display: inline-flex; justify-content: space-between; width: 100%; margin-bottom: 18px; color: #8c6b00; font-size: .78rem; font-weight: 700; }
-.profile-link span { font-size: 1rem; }
-.tutor-card details { border-top: 1px solid var(--line); padding-top: 14px; }
+.tutor-meta { margin: 5px 0 0; color: var(--muted); font-size: .9rem; }
+.tutor-meta strong { color: var(--ink); }
+.tutor-card details { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 14px; }
 .tutor-card summary { cursor: pointer; color: var(--ink); font-size: .78rem; font-weight: 700; list-style: none; }
 .tutor-card summary::-webkit-details-marker { display: none; }
 .tutor-card summary::after { content: '+'; float: right; color: var(--gold); font-size: 1.1rem; line-height: .8; }

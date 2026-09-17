@@ -14,7 +14,7 @@ async function findAll(filePath) {
   try {
     const tutors = await new Promise((resolve, reject) => {
       db.all(
-        'SELECT id, name, major, classification, subjects, availability FROM tutors ORDER BY id ASC',
+        'SELECT id, name, image, major, classification, subjects, availability FROM tutors ORDER BY id ASC',
         (error, rows) => error ? reject(error) : resolve(rows)
       );
     });
@@ -30,7 +30,7 @@ async function findById(filePath, tutorId) {
   try {
     const tutor = await new Promise((resolve, reject) => {
       db.get(
-        'SELECT id, name, major, classification, subjects, availability FROM tutors WHERE id = ?',
+        'SELECT id, name, image, major, classification, subjects, availability FROM tutors WHERE id = ?',
         [Number(tutorId)],
         (error, row) => error ? reject(error) : resolve(row)
       );

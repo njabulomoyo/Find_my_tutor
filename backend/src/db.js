@@ -14,6 +14,9 @@ async function migrateTutorsTable(db) {
     .every((column) => columns.includes(column));
 
   if (hasCurrentSchema) {
+    if (!columns.includes('image')) {
+      await run(db, 'ALTER TABLE tutors ADD COLUMN image TEXT');
+    }
     return;
   }
 
@@ -22,6 +25,7 @@ async function migrateTutorsTable(db) {
     CREATE TABLE tutors (
       id INTEGER PRIMARY KEY,
       name TEXT NOT NULL,
+      image TEXT,
       major TEXT NOT NULL,
       classification TEXT NOT NULL,
       subjects TEXT NOT NULL,
@@ -29,8 +33,8 @@ async function migrateTutorsTable(db) {
     )
   `);
   await run(db, `
-    INSERT INTO tutors (id, name, major, classification, subjects, availability)
-    SELECT id, name, subject, 'Unspecified', json_array(subject), json_array()
+    INSERT INTO tutors (id, name, image, major, classification, subjects, availability)
+    SELECT id, name, NULL, subject, 'Unspecified', json_array(subject), json_array()
     FROM tutors_legacy
   `);
   await run(db, 'DROP TABLE tutors_legacy');
@@ -73,11 +77,12 @@ async function initializeDatabase(filePath = DB_PATH) {
     if (Number(row.count) === 0) {
       for (const tutor of tutorsSeed) {
         await run(db, `
-          INSERT INTO tutors (id, name, major, classification, subjects, availability)
-          VALUES (?, ?, ?, ?, ?, ?)
+          INSERT INTO tutors (id, name, image, major, classification, subjects, availability)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
         `, [
           tutor.id,
           tutor.name,
+          tutor.image || null,
           tutor.major,
           tutor.classification,
           JSON.stringify(tutor.subjects),

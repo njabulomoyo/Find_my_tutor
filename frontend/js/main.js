@@ -21,10 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderTutors() {
     tutorGrid.innerHTML = tutors.map((tutor) => `
       <article class="tutor-card">
-        <div class="avatar">${initials(tutor.name)}</div>
+        ${tutor.image
+          ? `<img class="tutor-image" src="${tutor.image}" alt="${tutor.name}" />`
+          : `<div class="avatar tutor-image-fallback" aria-hidden="true">${initials(tutor.name)}</div>`}
         <h3>${tutor.name}</h3>
-        <p class="specialization">${tutor.major} · ${tutor.classification}</p>
-        <a class="profile-link" href="./profile.html?id=${encodeURIComponent(tutor.id)}">View tutor profile <span aria-hidden="true">→</span></a>
+        <p class="tutor-meta"><strong>Major:</strong> ${tutor.major}</p>
+        <p class="tutor-meta"><strong>Classification:</strong> ${tutor.classification}</p>
         <details>
           <summary>View profile details</summary>
           <div class="profile-details">
