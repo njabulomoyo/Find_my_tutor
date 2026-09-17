@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tutor profile | Find My Tutor</title>
+    <meta name="description" content="View tutor major, classification, subjects, and availability." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body class="profile-page">
+    <main class="profile-shell">
+      <div class="container">
+        <a class="back-link" href="./index.html#tutors">← Back to tutors</a>
+        <div id="profile-status" class="status-message" aria-live="polite">Loading tutor profile...</div>
+        <article id="profile-content" class="profile-panel" hidden>
+          <div class="profile-avatar avatar" id="profile-avatar"></div>
+          <div class="profile-main">
+            <p class="eyebrow">Tutor profile</p>
+            <h1 id="profile-name"></h1>
+            <p class="profile-subject" id="profile-major"></p>
+            <div class="profile-stats">
+              <div><span>Classification</span><strong id="profile-classification"></strong></div>
+              <div><span>Subjects</span><strong id="profile-subjects"></strong></div>
+              <div><span>Availability</span><strong id="profile-availability"></strong></div>
+            </div>
+            <a class="btn btn-primary" id="booking-link" href="./index.html#booking">Request a session <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      </div>
+    </main>
+    <script src="./js/profile.js"></script>
+  </body>
+</html>

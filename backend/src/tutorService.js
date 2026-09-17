@@ -7,8 +7,11 @@ function filterTutors(tutors, searchTerm = '') {
 
   return tutors.filter((tutor) => {
     const name = String(tutor.name || '').toLowerCase();
-    const subject = String(tutor.subject || '').toLowerCase();
-    return name.includes(normalizedTerm) || subject.includes(normalizedTerm);
+    const major = String(tutor.major || '').toLowerCase();
+    const subjects = (tutor.subjects || []).join(' ').toLowerCase();
+    return name.includes(normalizedTerm)
+      || major.includes(normalizedTerm)
+      || subjects.includes(normalizedTerm);
   });
 }
 

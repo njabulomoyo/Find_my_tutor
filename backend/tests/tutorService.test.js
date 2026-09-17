@@ -3,9 +3,9 @@ const assert = require('node:assert/strict');
 const { filterTutors } = require('../src/tutorService');
 
 const tutors = [
-  { id: 1, name: 'Amar Singh', subject: 'Physics' },
-  { id: 2, name: 'Lerato Khumalo', subject: 'English' },
-  { id: 3, name: 'Johan Pretorius', subject: 'Computer Science' }
+  { id: 1, name: 'Amar Singh', major: 'Physics', subjects: ['Physics', 'Calculus'] },
+  { id: 2, name: 'Lerato Khumalo', major: 'English', subjects: ['Academic Writing'] },
+  { id: 3, name: 'Johan Pretorius', major: 'Computer Science', subjects: ['Programming'] }
 ];
 
 test('returns all tutors when search term is empty', () => {
@@ -18,7 +18,7 @@ test('matches tutor names case-insensitively', () => {
 });
 
 test('matches tutor subjects case-insensitively', () => {
-  const result = filterTutors(tutors, 'physics');
+  const result = filterTutors(tutors, 'calculus');
   assert.deepEqual(result, [tutors[0]]);
 });
 
