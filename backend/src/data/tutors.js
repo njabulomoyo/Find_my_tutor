@@ -3,7 +3,7 @@ const tutors = [
     id: 1,
     name: 'Adriel Dube',
     image: null,
-    major: 'Physics',
+    major: 'Computer Science & Cloud Computing',
     classification: 'Senior',
     subjects: ['Pre-Calculus', 'Calculus I', 'Probability and Statistics', 'Data Structures and Algorithms', 'Computer Science I', 'Computer Science II'],
     availability: ['Mon 2:00 PM - 5:00 PM', 'Wed 10:00 AM - 1:00 PM']
