@@ -40,7 +40,7 @@ The backend runs on `http://localhost:5050` by default.
 
 ## Run the frontend
 
-Open `frontend/index.html` in a browser.
+The frontend's JavaScript is organized as ES modules (`frontend/js/`), which browsers only load over `http(s)://`, not `file://`. Run the backend first (see above) — it serves `frontend/` as static files — then visit `http://localhost:5050` in a browser. Opening `frontend/index.html` directly by double-clicking it will not work.
 
 The appointment form currently displays a confirmation message without saving an appointment. Student authentication, appointment persistence, staff confirmation, notifications, and calendar integration belong to a later phase.
 
