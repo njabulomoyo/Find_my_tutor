@@ -14,7 +14,7 @@ async function listTutors(req, res) {
 
 async function getTutor(req, res) {
   try {
-    const tutor = await tutorRepository.findById(req.params.id);
+    const tutor = await tutorRepository.findById(undefined, req.params.id);
 
     if (!tutor) {
       return res.status(404).json({ message: 'Tutor not found' });

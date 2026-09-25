@@ -25,7 +25,7 @@ test('persists tutor and booking data in SQLite', async () => {
   assert.equal(tutors.some((tutor) => tutor.name === 'Adriel Dube'), true);
 
   const tutor = await getTutorById(dbPath, 1);
-  assert.equal(tutor.major, 'Physics');
+  assert.equal(tutor.major, 'Computer Science & Cloud Computing');
   assert.equal(tutor.classification, 'Senior');
   assert.deepEqual(tutor.subjects, [
     'Pre-Calculus',
