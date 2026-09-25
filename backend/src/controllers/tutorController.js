@@ -7,7 +7,7 @@ async function listTutors(req, res) {
     const allTutors = await tutorRepository.findAll();
     const tutors = filterTutors(allTutors, query);
     return res.json({ tutors });
-  } catch (error) {
+  } catch {
     return res.status(500).json({ message: 'Unable to fetch tutors.' });
   }
 }
@@ -21,7 +21,7 @@ async function getTutor(req, res) {
     }
 
     return res.json({ tutor });
-  } catch (error) {
+  } catch {
     return res.status(500).json({ message: 'Unable to fetch tutor profile.' });
   }
 }

@@ -1,7 +1,6 @@
 const { createApp } = require('./app');
 const { initializeDatabase } = require('./db');
-
-const PORT = process.env.PORT || 5050;
+const { PORT } = require('./config');
 
 (async () => {
   await initializeDatabase();

@@ -1,7 +1,5 @@
 const tutorsSeed = require('./data/tutors');
 const { DB_PATH, openDatabase, run, get, all } = require('./db/connection');
-const tutorRepository = require('./db/tutorRepository');
-const bookingRepository = require('./db/bookingRepository');
 
 async function getTableColumns(db, tableName) {
   const columns = await all(db, `PRAGMA table_info(${tableName})`);
@@ -98,27 +96,7 @@ async function initializeDatabase(filePath = DB_PATH) {
   }
 }
 
-function getTutors(filePath = DB_PATH) {
-  return tutorRepository.findAll(filePath);
-}
-
-function getTutorById(filePath = DB_PATH, tutorId) {
-  return tutorRepository.findById(filePath, tutorId);
-}
-
-function getBookings(filePath = DB_PATH) {
-  return bookingRepository.findAll(filePath);
-}
-
-function createBooking(filePath = DB_PATH, booking) {
-  return bookingRepository.create(filePath, booking);
-}
-
 module.exports = {
   DB_PATH,
   initializeDatabase,
-  getTutors,
-  getTutorById,
-  getBookings,
-  createBooking,
 };
