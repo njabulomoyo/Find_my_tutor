@@ -27,7 +27,9 @@ The backend is a basic Express API with:
 - `GET /api/health`
 - `GET /api/tutors`
 - `GET /api/tutors/:id`
-- `POST /api/bookings`
+- `GET /api/tutors?subject=Calculus%20I` — tutors who teach a subject
+- `GET /api/slots?subject=Calculus%20I[&tutorId=3]` — open 30-minute times over the next 14 days
+- `POST /api/bookings` — books a slot (`date`, `start`, and a `tutorId` or `"any"`)
 
 Tutors and bookings are stored in SQLite at `backend/src/data/find-my-tutor.db` (override with `DB_PATH`).
 
@@ -45,7 +47,7 @@ The backend runs on `http://localhost:5050` by default.
 
 The frontend's JavaScript is organized as ES modules (`frontend/js/`), which browsers only load over `http(s)://`, not `file://`. Run the backend first (see above) — it serves `frontend/` as static files — then visit `http://localhost:5050` in a browser. Opening `frontend/index.html` directly by double-clicking it will not work.
 
-Submitting the appointment form saves the booking and sends a confirmation email to the student and a notification to the tutor. Student authentication, staff confirmation, and calendar integration belong to a later phase.
+Students book by picking a subject, then an open time (optionally filtered to one tutor), then a tutor free at that time or "Any available tutor". Times are 30-minute slots built from each tutor's weekly `availability` windows in `backend/src/data/tutors.js`, for the next 14 days. The server rejects times outside a tutor's hours, slots already taken (enforced by a unique database index, so simultaneous requests can't double book), a second session for the same student at the same time, and more than 4 sessions per student per day. Submitting saves the booking and sends a confirmation email to the student and a notification to the tutor. Student authentication, staff confirmation, and calendar integration belong to a later phase.
 
 ## Email setup
 
