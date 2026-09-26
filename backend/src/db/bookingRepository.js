@@ -10,6 +10,30 @@ async function findAll(filePath) {
   }
 }
 
+async function findScheduledBetween(filePath, fromDate, toDate) {
+  const db = await openDatabase(filePath);
+
+  try {
+    return await all(db, `
+      SELECT * FROM bookings
+      WHERE sessionDate BETWEEN ? AND ?
+      ORDER BY sessionDate ASC, startTime ASC
+    `, [fromDate, toDate]);
+  } finally {
+    db.close();
+  }
+}
+
+async function findByEmailOnDate(filePath, email, sessionDate) {
+  const db = await openDatabase(filePath);
+
+  try {
+    return await all(db, 'SELECT * FROM bookings WHERE email = ? AND sessionDate = ?', [email, sessionDate]);
+  } finally {
+    db.close();
+  }
+}
+
 async function create(filePath, booking) {
   const db = await openDatabase(filePath);
 
@@ -24,8 +48,11 @@ async function create(filePath, booking) {
         subject,
         message,
         tutorName,
-        createdAt
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        createdAt,
+        sessionDate,
+        startTime,
+        endTime
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [
       booking.studentName,
       booking.email,
@@ -36,6 +63,9 @@ async function create(filePath, booking) {
       booking.message || '',
       booking.tutorName || '',
       new Date().toISOString(),
+      booking.sessionDate || null,
+      booking.startTime || null,
+      booking.endTime || null,
     ]);
 
     return await get(db, 'SELECT * FROM bookings WHERE id = ?', [result.id]);
@@ -44,7 +74,16 @@ async function create(filePath, booking) {
   }
 }
 
+function isSlotTakenError(error) {
+  return Boolean(error)
+    && error.code === 'SQLITE_CONSTRAINT'
+    && error.message.includes('UNIQUE constraint failed: bookings.tutorId, bookings.sessionDate, bookings.startTime');
+}
+
 module.exports = {
   findAll,
+  findScheduledBetween,
+  findByEmailOnDate,
   create,
+  isSlotTakenError,
 };

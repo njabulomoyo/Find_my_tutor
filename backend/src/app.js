@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('node:path');
 const tutorRoutes = require('./routes/tutorRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const slotRoutes = require('./routes/slotRoutes');
 const { CORS_ORIGIN } = require('./config');
 
 function createApp() {
@@ -26,6 +27,7 @@ function createApp() {
   });
   app.use('/api/tutors', tutorRoutes);
   app.use('/api/bookings', bookingRoutes);
+  app.use('/api/slots', slotRoutes);
 
   return app;
 }

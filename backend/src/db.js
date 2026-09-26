@@ -42,6 +42,25 @@ async function migrateTutorsTable(db) {
   await run(db, 'DROP TABLE tutors_legacy');
 }
 
+async function migrateBookingsTable(db) {
+  const columns = await getTableColumns(db, 'bookings');
+
+  for (const column of ['sessionDate', 'startTime', 'endTime']) {
+    if (!columns.includes(column)) {
+      await run(db, `ALTER TABLE bookings ADD COLUMN ${column} TEXT`);
+    }
+  }
+
+  // A tutor can hold only one booking per slot. This is what makes double booking
+  // impossible even if two requests pass the availability check at the same time.
+  // Legacy bookings made before time slots existed have no sessionDate.
+  await run(db, `
+    CREATE UNIQUE INDEX IF NOT EXISTS bookings_tutor_slot
+    ON bookings (tutorId, sessionDate, startTime)
+    WHERE sessionDate IS NOT NULL
+  `);
+}
+
 async function initializeDatabase(filePath = DB_PATH) {
   const db = await openDatabase(filePath);
 
@@ -70,9 +89,14 @@ async function initializeDatabase(filePath = DB_PATH) {
         subject TEXT NOT NULL,
         message TEXT,
         tutorName TEXT,
-        createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        createdAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        sessionDate TEXT,
+        startTime TEXT,
+        endTime TEXT
       )
     `);
+
+    await migrateBookingsTable(db);
 
     // data/tutors.js is the source of truth for tutor profiles: sync it on every
     // startup so edits show up after a restart. Tutors not in the seed are left

@@ -146,3 +146,39 @@ test('syncs tutor profiles from the seed file on every startup', async () => {
     fs.unlinkSync(dbPath);
   }
 });
+
+test('the database rejects two bookings for the same tutor and slot', async () => {
+  const dbPath = path.join(__dirname, 'temp-unique-slot-find-my-tutor.db');
+
+  if (fs.existsSync(dbPath)) {
+    fs.unlinkSync(dbPath);
+  }
+
+  const db = await initializeDatabase(dbPath);
+  db.close();
+
+  const slotBooking = {
+    studentName: 'Aisha Ndlovu',
+    email: 'aisha@example.com',
+    tutorId: 2,
+    subject: 'Calculus II',
+    preferredDate: '2026-09-28',
+    sessionDate: '2026-09-28',
+    startTime: '13:00',
+    endTime: '13:30',
+  };
+
+  try {
+    await bookingRepository.create(dbPath, slotBooking);
+    await assert.rejects(
+      bookingRepository.create(dbPath, { ...slotBooking, email: 'someone-else@example.com' }),
+      (error) => bookingRepository.isSlotTakenError(error)
+    );
+
+    // Legacy bookings without a slot are not constrained.
+    await bookingRepository.create(dbPath, { ...slotBooking, sessionDate: null, startTime: null });
+    await bookingRepository.create(dbPath, { ...slotBooking, sessionDate: null, startTime: null });
+  } finally {
+    fs.unlinkSync(dbPath);
+  }
+});
