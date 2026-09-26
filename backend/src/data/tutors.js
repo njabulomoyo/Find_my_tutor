@@ -7,7 +7,7 @@ const tutors = [
     major: 'Computer Science & Cloud Computing',
     classification: 'Senior',
     subjects: ['Pre-Calculus', 'Calculus I', 'Probability and Statistics', 'Data Structures and Algorithms', 'Computer Science I', 'Computer Science II'],
-    availability: ['Mon 2:00 PM - 5:00 PM', 'Wed 10:00 AM - 1:00 PM']
+    availability: ['Mon 8:00 AM - 9:00 AM','Tue 11:00 AM - 12:00 PM', 'Wed 8:00 AM - 9:00 AM', 'Thu 11:00 AM - 12:00 PM']
   },
   {
     id: 2,
