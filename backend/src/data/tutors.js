@@ -29,7 +29,7 @@ const tutors = [
     email: 'mmangund@gsumail.gram.edu',
     major: 'Biology',
     classification: 'Graduate',
-    subjects: ['General Chemistry I','General Chemistry II', 'Biology I','Anatomy and Physiology I', 'pre-Calculus', 'Calculus I'],
+    subjects: ['General Chemistry I','General Chemistry II', 'Biology I','Anatomy and Physiology I', 'Pre-Calculus', 'Calculus I'],
     availability: [ 'Mon 10:00 AM - 12:00 PM & 3:30 PM - 5:00 PM','Tue 11:00 AM - 2:00 PM', 'Wed 11:00 AM - 12:00 PM & 3:30 PM - 5:00 PM',
       'Thu 11:00 AM - 5:00 PM', 'Fri 9:00 AM - 1:00 PM']
   },
