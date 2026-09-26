@@ -13,7 +13,7 @@ This project is a tutor marketplace platform for connecting students with qualif
 - Grambling State University Student Success Center landing page
 - Responsive collapsible sidebar and mobile menu
 - Tutor listing with expandable subjects and availability
-- Presentation-only appointment request form
+- Appointment request form that saves bookings and emails the student and tutor
 - Basic API with tutor data
 
 ## Frontend
@@ -27,6 +27,9 @@ The backend is a basic Express API with:
 - `GET /api/health`
 - `GET /api/tutors`
 - `GET /api/tutors/:id`
+- `POST /api/bookings`
+
+Tutors and bookings are stored in SQLite at `backend/src/data/find-my-tutor.db` (override with `DB_PATH`).
 
 ## Run the backend
 
@@ -42,7 +45,13 @@ The backend runs on `http://localhost:5050` by default.
 
 The frontend's JavaScript is organized as ES modules (`frontend/js/`), which browsers only load over `http(s)://`, not `file://`. Run the backend first (see above) — it serves `frontend/` as static files — then visit `http://localhost:5050` in a browser. Opening `frontend/index.html` directly by double-clicking it will not work.
 
-The appointment form currently displays a confirmation message without saving an appointment. Student authentication, appointment persistence, staff confirmation, notifications, and calendar integration belong to a later phase.
+Submitting the appointment form saves the booking and sends a confirmation email to the student and a notification to the tutor. Student authentication, staff confirmation, and calendar integration belong to a later phase.
+
+## Email setup
+
+By default no real email is sent. The backend uses [Ethereal](https://ethereal.email), a fake test inbox, and logs a preview link for each email to the server console. Tests use an in-memory transport and send nothing.
+
+To send real email, copy `backend/.env.example` to `backend/.env` and fill in your SMTP provider's settings. Setting `SMTP_HOST` switches to real delivery with no code changes. `backend/.env` is gitignored; never commit credentials.
 
 ## Git workflow
 
@@ -75,4 +84,10 @@ Avoid combining unrelated work in one commit. If a change touches several files,
 - Search filtering (the current tutor list is intentionally small)
 - Reviews and ratings
 - Admin dashboard
-- Payments and notifications
+- Payments
+
+## Before production
+
+- Real email: pick a production provider (e.g. Resend, Postmark, Amazon SES, or the university mail server), verify a sending domain with SPF, DKIM, and DMARC records, and configure `backend/.env` on the server.
+- Replace tutor seed emails in `backend/src/data/tutors.js` with confirmed addresses so test bookings don't reach real people.
+- Send booking emails without blocking the booking response (e.g. a background queue), so a slow mail server doesn't delay the form.
