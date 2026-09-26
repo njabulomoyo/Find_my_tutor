@@ -18,7 +18,7 @@ const tutors = [
     classification: 'Senior',
     subjects: ['Engineering', 'Calculus II','Calculus III', 'Probability and Statistics','Data Structures and Algorithms' ],
     availability: ['Mon 12:00 PM - 5:00 PM','Tue 11:00 AM - 5:00 PM', 'Wed 3:00 PM - 5:00 PM',
-      'Thu 12:00 AM - 5:00 PM', 'Fri 11:00 AM - 1:00 PM'
+      'Thu 12:00 PM - 5:00 PM', 'Fri 11:00 AM - 1:00 PM'
     ]
     
   },
@@ -30,7 +30,7 @@ const tutors = [
     major: 'Biology',
     classification: 'Graduate',
     subjects: ['General Chemistry I','General Chemistry II', 'Biology I','Anatomy and Physiology I', 'pre-Calculus', 'Calculus I'],
-    availability: [ 'Mon 10:00 AM - 12:00 PM & 3:30PM – 5:00PM','Tue 11:00 AM - 2:00 PM', 'Wed 11:00 AM - 12:00 PM and 3:30PM - 5:00PM',
+    availability: [ 'Mon 10:00 AM - 12:00 PM & 3:30 PM - 5:00 PM','Tue 11:00 AM - 2:00 PM', 'Wed 11:00 AM - 12:00 PM & 3:30 PM - 5:00 PM',
       'Thu 11:00 AM - 5:00 PM', 'Fri 9:00 AM - 1:00 PM']
   },
   {
@@ -41,8 +41,8 @@ const tutors = [
     major: 'Computer Science',
     classification: 'Senior',
     subjects: ['Computer Science I', 'Computer Science II', 'Data Structures and Algorithms', 'Probability and Statistics', 'Pre-Calculus'],
-    availability: ['Mon 10:00 AM - 3:00 PM & 4:30PM – 5:00PM','Tue 11:00 AM - 1:00 PM & 3:00PM – 5:00PM', 'Wed 11:00 AM - 3:00 PM & 3:00PM - 5:00PM',
-      'Thu 11:00 AM - 1:00 PM & 3:00PM – 5:00PM', 'Fri 9:00 AM - 10:00 AM & 11:00 AM - 1:00 PM']
+    availability: ['Mon 10:00 AM - 3:00 PM & 4:30 PM - 5:00 PM','Tue 11:00 AM - 1:00 PM & 3:00 PM - 5:00 PM', 'Wed 11:00 AM - 5:00 PM',
+      'Thu 11:00 AM - 1:00 PM & 3:00 PM - 5:00 PM', 'Fri 9:00 AM - 10:00 AM & 11:00 AM - 1:00 PM']
   },
   {
     id: 5,
@@ -62,7 +62,7 @@ const tutors = [
     major: 'Math and Physics',
     classification: 'Senior',
     subjects: ['Pre-Calculus I','Pre-Calculus II','Trigonometry','Calculus I','General Psychology'],
-    availability: ['Mon 11:30 AM - 4:30 PM','Tue 12:00 PM - 5:00 PM', 'Wed 11:30 AM - 4:30 PM', 'Thu 12:00 AM - 5:00 PM']
+    availability: ['Mon 11:30 AM - 4:30 PM','Tue 12:00 PM - 5:00 PM', 'Wed 11:30 AM - 4:30 PM', 'Thu 12:00 PM - 5:00 PM']
   }
 ];
 
