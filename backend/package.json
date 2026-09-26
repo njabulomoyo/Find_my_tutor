@@ -10,7 +10,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "dotenv": "^18.0.3",
     "express": "^4.19.2",
+    "nodemailer": "^10.0.10",
     "sqlite3": "^6.0.1"
   },
   "devDependencies": {

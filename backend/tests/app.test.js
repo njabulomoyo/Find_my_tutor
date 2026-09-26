@@ -3,6 +3,7 @@ const fs = require('node:fs');
 
 const TEST_DB_PATH = path.join(__dirname, 'tmp-app-http.db');
 process.env.DB_PATH = TEST_DB_PATH;
+process.env.NODE_ENV = 'test';
 
 const { test, before, after } = require('node:test');
 const assert = require('node:assert/strict');

@@ -1,6 +1,7 @@
 const { validateBooking } = require('../bookingService');
 const tutorRepository = require('../db/tutorRepository');
 const bookingRepository = require('../db/bookingRepository');
+const { sendBookingEmails } = require('../email');
 
 async function createBookingRequest(req, res) {
   try {
@@ -16,6 +17,8 @@ async function createBookingRequest(req, res) {
       tutorName: tutor.name,
       preferredTime: req.body.preferredTime || '',
     });
+
+    await sendBookingEmails({ booking, tutor });
 
     return res.status(201).json({
       message: 'Booking request submitted successfully.',
