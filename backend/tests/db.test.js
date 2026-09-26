@@ -81,7 +81,7 @@ test('migrates legacy tutor fields to the current tutor model', async () => {
   await new Promise((resolve, reject) => {
     legacyDb.run(
       'INSERT INTO tutors (id, name, subject, rating, pricePerHour, experience) VALUES (?, ?, ?, ?, ?, ?)',
-      [1, 'Legacy Tutor', 'History', 4.5, 100, '2 years'],
+      [99, 'Legacy Tutor', 'History', 4.5, 100, '2 years'],
       (error) => error ? reject(error) : resolve()
     );
   });
@@ -90,9 +90,9 @@ test('migrates legacy tutor fields to the current tutor model', async () => {
   const tutorDb = await initializeDatabase(dbPath);
 
   try {
-    const tutor = await tutorRepository.findById(dbPath, 1);
+    const tutor = await tutorRepository.findById(dbPath, 99);
     assert.deepEqual(tutor, {
-      id: 1,
+      id: 99,
       name: 'Legacy Tutor',
       image: null,
       major: 'History',
@@ -103,6 +103,51 @@ test('migrates legacy tutor fields to the current tutor model', async () => {
     });
   } finally {
     tutorDb.close();
+    fs.unlinkSync(dbPath);
+  }
+});
+
+test('syncs tutor profiles from the seed file on every startup', async () => {
+  const dbPath = path.join(__dirname, 'temp-sync-find-my-tutor.db');
+
+  if (fs.existsSync(dbPath)) {
+    fs.unlinkSync(dbPath);
+  }
+
+  const firstDb = await initializeDatabase(dbPath);
+  await new Promise((resolve, reject) => {
+    firstDb.run(
+      'UPDATE tutors SET availability = ?, major = ? WHERE id = 1',
+      [JSON.stringify(['Sun 1:00 AM - 2:00 AM']), 'Stale Major'],
+      (error) => error ? reject(error) : resolve()
+    );
+  });
+  firstDb.close();
+
+  await bookingRepository.create(dbPath, {
+    studentName: 'Aisha Ndlovu',
+    email: 'aisha@example.com',
+    tutorId: 1,
+    preferredDate: '2026-09-12',
+    subject: 'Physics',
+  });
+
+  const secondDb = await initializeDatabase(dbPath);
+
+  try {
+    const tutor = await tutorRepository.findById(dbPath, 1);
+    assert.equal(tutor.major, 'Computer Science & Cloud Computing');
+    assert.deepEqual(tutor.availability, [
+      'Mon 8:00 AM - 9:00 AM',
+      'Tue 11:00 AM - 12:00 PM',
+      'Wed 8:00 AM - 9:00 AM',
+      'Thu 11:00 AM - 12:00 PM',
+    ]);
+
+    const bookings = await bookingRepository.findAll(dbPath);
+    assert.equal(bookings.length, 1);
+  } finally {
+    secondDb.close();
     fs.unlinkSync(dbPath);
   }
 });
