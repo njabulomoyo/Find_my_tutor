@@ -15,6 +15,9 @@ async function migrateTutorsTable(db) {
     if (!columns.includes('image')) {
       await run(db, 'ALTER TABLE tutors ADD COLUMN image TEXT');
     }
+    if (!columns.includes('email')) {
+      await run(db, 'ALTER TABLE tutors ADD COLUMN email TEXT');
+    }
     return;
   }
 
@@ -27,12 +30,13 @@ async function migrateTutorsTable(db) {
       major TEXT NOT NULL,
       classification TEXT NOT NULL,
       subjects TEXT NOT NULL,
-      availability TEXT NOT NULL
+      availability TEXT NOT NULL,
+      email TEXT
     )
   `);
   await run(db, `
-    INSERT INTO tutors (id, name, image, major, classification, subjects, availability)
-    SELECT id, name, NULL, subject, 'Unspecified', json_array(subject), json_array()
+    INSERT INTO tutors (id, name, image, major, classification, subjects, availability, email)
+    SELECT id, name, NULL, subject, 'Unspecified', json_array(subject), json_array(), NULL
     FROM tutors_legacy
   `);
   await run(db, 'DROP TABLE tutors_legacy');
@@ -75,8 +79,8 @@ async function initializeDatabase(filePath = DB_PATH) {
     if (Number(row.count) === 0) {
       for (const tutor of tutorsSeed) {
         await run(db, `
-          INSERT INTO tutors (id, name, image, major, classification, subjects, availability)
-          VALUES (?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO tutors (id, name, image, major, classification, subjects, availability, email)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `, [
           tutor.id,
           tutor.name,
@@ -85,6 +89,7 @@ async function initializeDatabase(filePath = DB_PATH) {
           tutor.classification,
           JSON.stringify(tutor.subjects),
           JSON.stringify(tutor.availability),
+          tutor.email || null,
         ]);
       }
     }

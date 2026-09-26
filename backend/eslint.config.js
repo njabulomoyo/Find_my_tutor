@@ -8,5 +8,8 @@ module.exports = [
       sourceType: 'commonjs',
       globals: { ...globals.node },
     },
+    rules: {
+      'no-unused-vars': ['error', { ignoreRestSiblings: true }],
+    },
   },
 ];

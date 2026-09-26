@@ -31,6 +31,7 @@ test('GET /api/tutors returns the seeded tutors', async () => {
   assert.equal(res.status, 200);
   assert.ok(Array.isArray(res.body.tutors) && res.body.tutors.length > 0);
   assert.ok(res.body.tutors.some((tutor) => tutor.name === 'Adriel Dube'));
+  assert.ok(res.body.tutors.every((tutor) => tutor.email === undefined));
 });
 
 test('GET /api/tutors/:id returns the matching tutor', async () => {
@@ -38,6 +39,7 @@ test('GET /api/tutors/:id returns the matching tutor', async () => {
   assert.equal(res.status, 200);
   assert.equal(res.body.tutor.name, 'Adriel Dube');
   assert.equal(res.body.tutor.major, 'Computer Science & Cloud Computing');
+  assert.equal(res.body.tutor.email, undefined);
 });
 
 test('GET /api/tutors/:id returns 404 for an unknown id', async () => {

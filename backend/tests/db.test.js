@@ -23,6 +23,7 @@ test('persists tutor and booking data in SQLite', async () => {
   const tutor = await tutorRepository.findById(dbPath, 1);
   assert.equal(tutor.major, 'Computer Science & Cloud Computing');
   assert.equal(tutor.classification, 'Senior');
+  assert.equal(tutor.email, 'adube@gsumail.gram.edu');
   assert.deepEqual(tutor.subjects, [
     'Pre-Calculus',
     'Calculus I',
@@ -31,7 +32,12 @@ test('persists tutor and booking data in SQLite', async () => {
     'Computer Science I',
     'Computer Science II',
   ]);
-  assert.deepEqual(tutor.availability, ['Mon 2:00 PM - 5:00 PM', 'Wed 10:00 AM - 1:00 PM']);
+  assert.deepEqual(tutor.availability, [
+    'Mon 8:00 AM - 9:00 AM',
+    'Tue 11:00 AM - 12:00 PM',
+    'Wed 8:00 AM - 9:00 AM',
+    'Thu 11:00 AM - 12:00 PM',
+  ]);
 
   const booking = await bookingRepository.create(dbPath, {
     studentName: 'Aisha Ndlovu',
@@ -93,6 +99,7 @@ test('migrates legacy tutor fields to the current tutor model', async () => {
       classification: 'Unspecified',
       subjects: ['History'],
       availability: [],
+      email: null,
     });
   } finally {
     tutorDb.close();
