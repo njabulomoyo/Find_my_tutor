@@ -33,10 +33,10 @@ test('persists tutor and booking data in SQLite', async () => {
     'Computer Science II',
   ]);
   assert.deepEqual(tutor.availability, [
-    'Mon 8:00 AM - 9:00 AM',
-    'Tue 11:00 AM - 12:00 PM',
-    'Wed 8:00 AM - 9:00 AM',
-    'Thu 11:00 AM - 12:00 PM',
+    { day: 'Mon', start: '08:00', end: '09:00' },
+    { day: 'Tue', start: '11:00', end: '12:00' },
+    { day: 'Wed', start: '08:00', end: '09:00' },
+    { day: 'Thu', start: '11:00', end: '12:00' },
   ]);
 
   const booking = await bookingRepository.create(dbPath, {
@@ -118,7 +118,7 @@ test('syncs tutor profiles from the seed file on every startup', async () => {
   await new Promise((resolve, reject) => {
     firstDb.run(
       'UPDATE tutors SET availability = ?, major = ? WHERE id = 1',
-      [JSON.stringify(['Sun 1:00 AM - 2:00 AM']), 'Stale Major'],
+      [JSON.stringify([{ day: 'Sun', start: '01:00', end: '02:00' }]), 'Stale Major'],
       (error) => error ? reject(error) : resolve()
     );
   });
@@ -137,12 +137,7 @@ test('syncs tutor profiles from the seed file on every startup', async () => {
   try {
     const tutor = await tutorRepository.findById(dbPath, 1);
     assert.equal(tutor.major, 'Computer Science & Cloud Computing');
-    assert.deepEqual(tutor.availability, [
-      'Mon 8:00 AM - 9:00 AM',
-      'Tue 11:00 AM - 12:00 PM',
-      'Wed 8:00 AM - 9:00 AM',
-      'Thu 11:00 AM - 12:00 PM',
-    ]);
+    assert.deepEqual(tutor.availability[0], { day: 'Mon', start: '08:00', end: '09:00' });
 
     const bookings = await bookingRepository.findAll(dbPath);
     assert.equal(bookings.length, 1);

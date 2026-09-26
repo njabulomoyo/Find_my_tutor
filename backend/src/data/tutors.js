@@ -7,7 +7,12 @@ const tutors = [
     major: 'Computer Science & Cloud Computing',
     classification: 'Senior',
     subjects: ['Pre-Calculus', 'Calculus I', 'Probability and Statistics', 'Data Structures and Algorithms', 'Computer Science I', 'Computer Science II'],
-    availability: ['Mon 8:00 AM - 9:00 AM','Tue 11:00 AM - 12:00 PM', 'Wed 8:00 AM - 9:00 AM', 'Thu 11:00 AM - 12:00 PM']
+    availability: [
+      { day: 'Mon', start: '08:00', end: '09:00' },
+      { day: 'Tue', start: '11:00', end: '12:00' },
+      { day: 'Wed', start: '08:00', end: '09:00' },
+      { day: 'Thu', start: '11:00', end: '12:00' },
+    ],
   },
   {
     id: 2,
@@ -17,10 +22,13 @@ const tutors = [
     major: 'Computer Engineering',
     classification: 'Senior',
     subjects: ['Engineering', 'Calculus II','Calculus III', 'Probability and Statistics','Data Structures and Algorithms' ],
-    availability: ['Mon 12:00 PM - 5:00 PM','Tue 11:00 AM - 5:00 PM', 'Wed 3:00 PM - 5:00 PM',
-      'Thu 12:00 PM - 5:00 PM', 'Fri 11:00 AM - 1:00 PM'
-    ]
-    
+    availability: [
+      { day: 'Mon', start: '12:00', end: '17:00' },
+      { day: 'Tue', start: '11:00', end: '17:00' },
+      { day: 'Wed', start: '15:00', end: '17:00' },
+      { day: 'Thu', start: '12:00', end: '17:00' },
+      { day: 'Fri', start: '11:00', end: '13:00' },
+    ],
   },
   {
     id: 3,
@@ -30,8 +38,15 @@ const tutors = [
     major: 'Biology',
     classification: 'Graduate',
     subjects: ['General Chemistry I','General Chemistry II', 'Biology I','Anatomy and Physiology I', 'Pre-Calculus', 'Calculus I'],
-    availability: [ 'Mon 10:00 AM - 12:00 PM & 3:30 PM - 5:00 PM','Tue 11:00 AM - 2:00 PM', 'Wed 11:00 AM - 12:00 PM & 3:30 PM - 5:00 PM',
-      'Thu 11:00 AM - 5:00 PM', 'Fri 9:00 AM - 1:00 PM']
+    availability: [
+      { day: 'Mon', start: '10:00', end: '12:00' },
+      { day: 'Mon', start: '15:30', end: '17:00' },
+      { day: 'Tue', start: '11:00', end: '14:00' },
+      { day: 'Wed', start: '11:00', end: '12:00' },
+      { day: 'Wed', start: '15:30', end: '17:00' },
+      { day: 'Thu', start: '11:00', end: '17:00' },
+      { day: 'Fri', start: '09:00', end: '13:00' },
+    ],
   },
   {
     id: 4,
@@ -41,8 +56,17 @@ const tutors = [
     major: 'Computer Science',
     classification: 'Senior',
     subjects: ['Computer Science I', 'Computer Science II', 'Data Structures and Algorithms', 'Probability and Statistics', 'Pre-Calculus'],
-    availability: ['Mon 10:00 AM - 3:00 PM & 4:30 PM - 5:00 PM','Tue 11:00 AM - 1:00 PM & 3:00 PM - 5:00 PM', 'Wed 11:00 AM - 5:00 PM',
-      'Thu 11:00 AM - 1:00 PM & 3:00 PM - 5:00 PM', 'Fri 9:00 AM - 10:00 AM & 11:00 AM - 1:00 PM']
+    availability: [
+      { day: 'Mon', start: '10:00', end: '15:00' },
+      { day: 'Mon', start: '16:30', end: '17:00' },
+      { day: 'Tue', start: '11:00', end: '13:00' },
+      { day: 'Tue', start: '15:00', end: '17:00' },
+      { day: 'Wed', start: '11:00', end: '17:00' },
+      { day: 'Thu', start: '11:00', end: '13:00' },
+      { day: 'Thu', start: '15:00', end: '17:00' },
+      { day: 'Fri', start: '09:00', end: '10:00' },
+      { day: 'Fri', start: '11:00', end: '13:00' },
+    ],
   },
   {
     id: 5,
@@ -52,7 +76,11 @@ const tutors = [
     major: 'Nursing',
     classification: 'Senior',
     subjects: ['Anatomy and Physiology I', 'Pathophysiology', 'Microbiology', 'College Algebra'],
-    availability: ['Tue 11:00 AM - 5:00 PM', 'Wed 10:00 AM - 4:00 PM', 'Thu 10:00 AM - 5:00 PM',]
+    availability: [
+      { day: 'Tue', start: '11:00', end: '17:00' },
+      { day: 'Wed', start: '10:00', end: '16:00' },
+      { day: 'Thu', start: '10:00', end: '17:00' },
+    ],
   },
   {
     id: 6,
@@ -62,7 +90,12 @@ const tutors = [
     major: 'Math and Physics',
     classification: 'Senior',
     subjects: ['Pre-Calculus I','Pre-Calculus II','Trigonometry','Calculus I','General Psychology'],
-    availability: ['Mon 11:30 AM - 4:30 PM','Tue 12:00 PM - 5:00 PM', 'Wed 11:30 AM - 4:30 PM', 'Thu 12:00 PM - 5:00 PM']
+    availability: [
+      { day: 'Mon', start: '11:30', end: '16:30' },
+      { day: 'Tue', start: '12:00', end: '17:00' },
+      { day: 'Wed', start: '11:30', end: '16:30' },
+      { day: 'Thu', start: '12:00', end: '17:00' },
+    ],
   }
 ];
 

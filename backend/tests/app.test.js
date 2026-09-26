@@ -41,6 +41,18 @@ test('GET /api/tutors/:id returns the matching tutor', async () => {
   assert.equal(res.body.tutor.name, 'Adriel Dube');
   assert.equal(res.body.tutor.major, 'Computer Science & Cloud Computing');
   assert.equal(res.body.tutor.email, undefined);
+  assert.deepEqual(res.body.tutor.availability, [
+    'Mon 8:00 AM - 9:00 AM',
+    'Tue 11:00 AM - 12:00 PM',
+    'Wed 8:00 AM - 9:00 AM',
+    'Thu 11:00 AM - 12:00 PM',
+  ]);
+});
+
+test('GET /api/tutors?subject= returns only tutors who teach that subject', async () => {
+  const res = await request(app).get('/api/tutors?subject=calculus%20i');
+  assert.equal(res.status, 200);
+  assert.deepEqual(res.body.tutors.map((tutor) => tutor.name).sort(), ['Adriel Dube', 'Maitaishe Mangudhla', 'Stecy Chirinda']);
 });
 
 test('GET /api/tutors/:id returns 404 for an unknown id', async () => {

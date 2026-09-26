@@ -1,16 +1,20 @@
 const { filterTutors } = require('../tutorService');
+const { formatAvailability, teachesSubject } = require('../scheduleService');
 const tutorRepository = require('../db/tutorRepository');
 
 function toPublicTutor(tutor) {
   const { email, ...publicTutor } = tutor;
-  return publicTutor;
+  return { ...publicTutor, availability: formatAvailability(tutor.availability) };
 }
 
 async function listTutors(req, res) {
   try {
     const query = String(req.query.q || '').trim();
     const allTutors = await tutorRepository.findAll();
-    const tutors = filterTutors(allTutors, query).map(toPublicTutor);
+    const subject = String(req.query.subject || '').trim();
+    const tutors = filterTutors(allTutors, query)
+      .filter((tutor) => !subject || teachesSubject(tutor, subject))
+      .map(toPublicTutor);
     return res.json({ tutors });
   } catch {
     return res.status(500).json({ message: 'Unable to fetch tutors.' });
