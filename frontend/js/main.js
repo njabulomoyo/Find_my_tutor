@@ -1,6 +1,6 @@
 import { fetchTutors } from './api.js';
 import { renderTutorGrid } from './tutorGrid.js';
-import { populateBookingFields, initBookingForm } from './bookingForm.js';
+import { initBookingForm } from './bookingForm.js';
 import { initSidebarNav } from './sidebarNav.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,10 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const tutorSelect = document.getElementById('booking-tutor');
   const studentNameInput = document.getElementById('student-name');
   const emailInput = document.getElementById('student-email');
-  const dateInput = document.getElementById('date');
-  const timeInput = document.getElementById('time');
+  const slotSelect = document.getElementById('slot');
+  const slotTutorField = document.getElementById('slot-tutor-field');
+  const slotTutorSelect = document.getElementById('slot-tutor');
   const messageInput = document.getElementById('message');
-  const bookingForm = document.getElementById('booking-form');
+  const bookingFormEl = document.getElementById('booking-form');
   const bookingStatus = document.getElementById('booking-status');
 
   let tutors = [];
@@ -26,17 +27,18 @@ document.addEventListener('DOMContentLoaded', () => {
       tutorStatus.textContent = 'Tutor profiles are temporarily unavailable. Please try again later.';
     }
     renderTutorGrid(tutors, { gridEl: tutorGrid, statusEl: tutorStatus });
-    populateBookingFields(tutors, { subjectSelect, tutorSelect });
+    bookingForm.refresh();
   }
 
   initSidebarNav();
 
-  initBookingForm({
-    formEl: bookingForm,
+  const bookingForm = initBookingForm({
+    formEl: bookingFormEl,
     subjectSelect,
     tutorSelect,
-    dateInput,
-    timeInput,
+    slotSelect,
+    slotTutorField,
+    slotTutorSelect,
     messageInput,
     studentNameInput,
     emailInput,

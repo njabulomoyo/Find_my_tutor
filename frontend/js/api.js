@@ -15,6 +15,15 @@ export async function fetchTutorById(id) {
   return tutor;
 }
 
+export async function fetchSlots(subject, tutorId) {
+  const params = new URLSearchParams({ subject });
+  if (tutorId) params.set('tutorId', tutorId);
+  const response = await fetch(`${API_BASE_URL}/api/slots?${params}`);
+  if (!response.ok) throw new Error('Available times could not be loaded. Please try again.');
+  const { slots } = await response.json();
+  return slots || [];
+}
+
 export async function submitBooking(payload) {
   const response = await fetch(`${API_BASE_URL}/api/bookings`, {
     method: 'POST',
@@ -25,7 +34,9 @@ export async function submitBooking(payload) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'Booking request could not be submitted.');
+    const error = new Error(data.message || 'Booking request could not be submitted.');
+    error.status = response.status;
+    throw error;
   }
 
   return data;
