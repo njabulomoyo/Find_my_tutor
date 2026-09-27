@@ -29,6 +29,9 @@ export function initBookingForm(fields, getTutors) {
   let slots = [];
   let latestSlotRequest = 0;
 
+  // The note under the submit button; errors replace it temporarily.
+  const defaultNote = statusEl.textContent;
+
   function showStatus(text, kind) {
     statusEl.textContent = text;
     statusEl.classList.toggle('success', kind === 'success');
@@ -106,13 +109,14 @@ export function initBookingForm(fields, getTutors) {
 
   function showConfirmation({ tutor, subject, when, email }) {
     const { dialogEl } = fields;
-    if (!dialogEl || typeof dialogEl.showModal !== 'function') return;
+    if (!dialogEl || typeof dialogEl.showModal !== 'function') return false;
 
     dialogEl.querySelector('#booking-dialog-tutor').textContent = tutor;
     dialogEl.querySelector('#booking-dialog-subject').textContent = subject;
     dialogEl.querySelector('#booking-dialog-when').textContent = when;
     dialogEl.querySelector('#booking-dialog-email').textContent = email;
     dialogEl.showModal();
+    return true;
   }
 
   function resetForm() {
@@ -148,11 +152,13 @@ export function initBookingForm(fields, getTutors) {
         message: messageInput.value,
       });
 
-      showStatus(
-        `Booked with ${booking.tutorName} for ${slot.dateLabel}, ${slot.timeLabel}. The Student Success Center will confirm your appointment.`,
-        'success'
-      );
-      showConfirmation({ tutor: booking.tutorName, subject, when: `${slot.dateLabel}, ${slot.timeLabel}`, email });
+      const when = `${slot.dateLabel}, ${slot.timeLabel}`;
+      if (showConfirmation({ tutor: booking.tutorName, subject, when, email })) {
+        showStatus(defaultNote);
+      } else {
+        // Fallback for browsers without <dialog> support.
+        showStatus(`Booked with ${booking.tutorName} for ${when}. The Student Success Center will confirm your appointment.`, 'success');
+      }
       resetForm();
     } catch (error) {
       showStatus(error.message, 'error');
