@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const sqlite3 = require('sqlite3').verbose();
-const { initializeDatabase } = require('../src/db');
+const { initializeDatabase, syncTutorsFromSeed } = require('../src/db');
 const tutorRepository = require('../src/db/tutorRepository');
 const bookingRepository = require('../src/db/bookingRepository');
 
@@ -107,34 +107,60 @@ test('migrates legacy tutor fields to the current tutor model', async () => {
   }
 });
 
-test('syncs tutor profiles from the seed file on every startup', async () => {
-  const dbPath = path.join(__dirname, 'temp-sync-find-my-tutor.db');
+async function editTutorInDatabase(db) {
+  await new Promise((resolve, reject) => {
+    db.run(
+      'UPDATE tutors SET availability = ?, major = ? WHERE id = 1',
+      [JSON.stringify([{ day: 'Sun', start: '01:00', end: '02:00' }]), 'Edited Major'],
+      (error) => error ? reject(error) : resolve()
+    );
+  });
+}
+
+test('startup does not overwrite tutor edits made in the database', async () => {
+  const dbPath = path.join(__dirname, 'temp-startup-find-my-tutor.db');
 
   if (fs.existsSync(dbPath)) {
     fs.unlinkSync(dbPath);
   }
 
   const firstDb = await initializeDatabase(dbPath);
-  await new Promise((resolve, reject) => {
-    firstDb.run(
-      'UPDATE tutors SET availability = ?, major = ? WHERE id = 1',
-      [JSON.stringify([{ day: 'Sun', start: '01:00', end: '02:00' }]), 'Stale Major'],
-      (error) => error ? reject(error) : resolve()
-    );
-  });
+  await editTutorInDatabase(firstDb);
   firstDb.close();
-
-  await bookingRepository.create(dbPath, {
-    studentName: 'Aisha Ndlovu',
-    email: 'aisha@example.com',
-    tutorId: 1,
-    preferredDate: '2026-09-12',
-    subject: 'Physics',
-  });
 
   const secondDb = await initializeDatabase(dbPath);
 
   try {
+    const tutor = await tutorRepository.findById(dbPath, 1);
+    assert.equal(tutor.major, 'Edited Major');
+    assert.deepEqual(tutor.availability, [{ day: 'Sun', start: '01:00', end: '02:00' }]);
+  } finally {
+    secondDb.close();
+    fs.unlinkSync(dbPath);
+  }
+});
+
+test('syncTutorsFromSeed restores seed data and keeps bookings', async () => {
+  const dbPath = path.join(__dirname, 'temp-sync-find-my-tutor.db');
+
+  if (fs.existsSync(dbPath)) {
+    fs.unlinkSync(dbPath);
+  }
+
+  const db = await initializeDatabase(dbPath);
+
+  try {
+    await editTutorInDatabase(db);
+    await bookingRepository.create(dbPath, {
+      studentName: 'Aisha Ndlovu',
+      email: 'aisha@example.com',
+      tutorId: 1,
+      preferredDate: '2026-09-12',
+      subject: 'Physics',
+    });
+
+    assert.equal(await syncTutorsFromSeed(db), 6);
+
     const tutor = await tutorRepository.findById(dbPath, 1);
     assert.equal(tutor.major, 'Computer Science & Cloud Computing');
     assert.deepEqual(tutor.availability[0], { day: 'Mon', start: '08:00', end: '09:00' });
@@ -142,7 +168,7 @@ test('syncs tutor profiles from the seed file on every startup', async () => {
     const bookings = await bookingRepository.findAll(dbPath);
     assert.equal(bookings.length, 1);
   } finally {
-    secondDb.close();
+    db.close();
     fs.unlinkSync(dbPath);
   }
 });

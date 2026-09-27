@@ -1,5 +1,5 @@
 const tutorsSeed = require('./data/tutors');
-const { DB_PATH, openDatabase, run, all } = require('./db/connection');
+const { DB_PATH, openDatabase, run, get, all } = require('./db/connection');
 
 async function getTableColumns(db, tableName) {
   const columns = await all(db, `PRAGMA table_info(${tableName})`);
@@ -61,6 +61,36 @@ async function migrateBookingsTable(db) {
   `);
 }
 
+// Upserts every tutor from data/tutors.js. Never deletes tutors, since bookings
+// reference them by id.
+async function syncTutorsFromSeed(db) {
+  for (const tutor of tutorsSeed) {
+    await run(db, `
+      INSERT INTO tutors (id, name, image, major, classification, subjects, availability, email)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      ON CONFLICT(id) DO UPDATE SET
+        name = excluded.name,
+        image = excluded.image,
+        major = excluded.major,
+        classification = excluded.classification,
+        subjects = excluded.subjects,
+        availability = excluded.availability,
+        email = excluded.email
+    `, [
+      tutor.id,
+      tutor.name,
+      tutor.image || null,
+      tutor.major,
+      tutor.classification,
+      JSON.stringify(tutor.subjects),
+      JSON.stringify(tutor.availability),
+      tutor.email || null,
+    ]);
+  }
+
+  return tutorsSeed.length;
+}
+
 async function initializeDatabase(filePath = DB_PATH) {
   const db = await openDatabase(filePath);
 
@@ -98,31 +128,12 @@ async function initializeDatabase(filePath = DB_PATH) {
 
     await migrateBookingsTable(db);
 
-    // data/tutors.js is the source of truth for tutor profiles: sync it on every
-    // startup so edits show up after a restart. Tutors not in the seed are left
-    // alone (bookings reference them by id).
-    for (const tutor of tutorsSeed) {
-      await run(db, `
-        INSERT INTO tutors (id, name, image, major, classification, subjects, availability, email)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(id) DO UPDATE SET
-          name = excluded.name,
-          image = excluded.image,
-          major = excluded.major,
-          classification = excluded.classification,
-          subjects = excluded.subjects,
-          availability = excluded.availability,
-          email = excluded.email
-      `, [
-        tutor.id,
-        tutor.name,
-        tutor.image || null,
-        tutor.major,
-        tutor.classification,
-        JSON.stringify(tutor.subjects),
-        JSON.stringify(tutor.availability),
-        tutor.email || null,
-      ]);
+    // The database is the source of truth for tutors. data/tutors.js is starter
+    // data: it is imported only into an empty database here, or on demand with
+    // `npm run seed:tutors`.
+    const row = await get(db, 'SELECT COUNT(*) AS count FROM tutors');
+    if (Number(row.count) === 0) {
+      await syncTutorsFromSeed(db);
     }
 
     return db;
@@ -135,4 +146,5 @@ async function initializeDatabase(filePath = DB_PATH) {
 module.exports = {
   DB_PATH,
   initializeDatabase,
+  syncTutorsFromSeed,
 };

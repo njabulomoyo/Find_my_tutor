@@ -33,6 +33,19 @@ The backend is a basic Express API with:
 
 Tutors and bookings are stored in SQLite at `backend/src/data/find-my-tutor.db` (override with `DB_PATH`).
 
+## Tutor data
+
+Tutors are stored in the database, which is the source of truth; the API reads them from there on every request. `backend/src/data/tutors.js` is starter data: it is imported automatically only into an empty database (for example, a fresh install).
+
+After editing `tutors.js`, import it with:
+
+```bash
+cd backend
+npm run seed:tutors
+```
+
+This updates existing tutors and adds new ones. It never deletes tutors or bookings, and it overwrites any tutor changes made directly in the database. No server restart is needed.
+
 ## Run the backend
 
 ```bash
