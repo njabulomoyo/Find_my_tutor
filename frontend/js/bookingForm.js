@@ -104,6 +104,17 @@ export function initBookingForm(fields, getTutors) {
     return slots.find((slot) => slotValue(slot) === slotSelect.value);
   }
 
+  function showConfirmation({ tutor, subject, when, email }) {
+    const { dialogEl } = fields;
+    if (!dialogEl || typeof dialogEl.showModal !== 'function') return;
+
+    dialogEl.querySelector('#booking-dialog-tutor').textContent = tutor;
+    dialogEl.querySelector('#booking-dialog-subject').textContent = subject;
+    dialogEl.querySelector('#booking-dialog-when').textContent = when;
+    dialogEl.querySelector('#booking-dialog-email').textContent = email;
+    dialogEl.showModal();
+  }
+
   function resetForm() {
     formEl.reset();
     populateSubjects();
@@ -141,6 +152,7 @@ export function initBookingForm(fields, getTutors) {
         `Booked with ${booking.tutorName} for ${slot.dateLabel}, ${slot.timeLabel}. The Student Success Center will confirm your appointment.`,
         'success'
       );
+      showConfirmation({ tutor: booking.tutorName, subject, when: `${slot.dateLabel}, ${slot.timeLabel}`, email });
       resetForm();
     } catch (error) {
       showStatus(error.message, 'error');

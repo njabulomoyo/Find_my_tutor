@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const messageInput = document.getElementById('message');
   const bookingFormEl = document.getElementById('booking-form');
   const bookingStatus = document.getElementById('booking-status');
+  const bookingDialog = document.getElementById('booking-dialog');
 
   let tutors = [];
 
@@ -39,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     studentNameInput,
     emailInput,
     statusEl: bookingStatus,
+    dialogEl: bookingDialog,
   }, () => tutors);
 
   loadTutors();

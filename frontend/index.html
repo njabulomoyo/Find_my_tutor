@@ -54,7 +54,7 @@
 
       <section class="section booking-section" id="booking">
         <div class="container booking-layout">
-          <div class="booking-copy"><p class="eyebrow">Make a plan</p><h2>Book time to move forward.</h2><p>Tell us where you need support and we’ll help you connect with the right tutor. Your student details are already on file.</p><div class="booking-step"><span>01</span><p>Choose a subject and tutor.</p></div><div class="booking-step"><span>02</span><p>Pick a preferred date.</p></div><div class="booking-step"><span>03</span><p>Arrive ready to learn.</p></div></div>
+          <div class="booking-copy"><p class="eyebrow">Make a plan</p><h2>Book time to move forward.</h2><p>Tell us where you need support and we’ll help you connect with the right tutor. Your student details are already on file.</p><div class="booking-step"><span>01</span><p>Choose the subject you need help with.</p></div><div class="booking-step"><span>02</span><p>Pick a day and time. We’ll match you with a tutor.</p></div><div class="booking-step"><span>03</span><p>Arrive ready to learn.</p></div></div>
           <form class="booking-form" id="booking-form">
             <div class="form-heading"><span class="form-kicker">Appointment request</span><h3>Set up your session</h3></div>
             <label for="student-name">Student name<input id="student-name" name="studentName" type="text" placeholder="Your full name" required /></label>
@@ -67,6 +67,17 @@
             <p class="form-note" id="booking-status" aria-live="polite">This is a request only. The center will confirm your appointment.</p>
           </form>
         </div>
+        <dialog class="booking-dialog" id="booking-dialog" aria-labelledby="booking-dialog-title">
+          <span class="form-kicker">Request received</span>
+          <h3 id="booking-dialog-title">You’re booked in</h3>
+          <dl class="booking-dialog-details">
+            <div><dt>Tutor</dt><dd id="booking-dialog-tutor"></dd></div>
+            <div><dt>Subject</dt><dd id="booking-dialog-subject"></dd></div>
+            <div><dt>When</dt><dd id="booking-dialog-when"></dd></div>
+          </dl>
+          <p class="booking-dialog-note">A confirmation has been sent to <strong id="booking-dialog-email"></strong>. The Student Success Center will confirm your appointment.</p>
+          <form method="dialog"><button class="btn btn-primary full" type="submit">Done <span aria-hidden="true">→</span></button></form>
+        </dialog>
       </section>
 
       <footer class="footer" id="contact">
