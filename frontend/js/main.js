@@ -7,12 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const tutorGrid = document.getElementById('tutor-grid');
   const tutorStatus = document.getElementById('tutor-status');
   const subjectSelect = document.getElementById('subject');
-  const tutorSelect = document.getElementById('booking-tutor');
+  const daySelect = document.getElementById('day');
   const studentNameInput = document.getElementById('student-name');
   const emailInput = document.getElementById('student-email');
   const slotSelect = document.getElementById('slot');
-  const slotTutorField = document.getElementById('slot-tutor-field');
-  const slotTutorSelect = document.getElementById('slot-tutor');
   const messageInput = document.getElementById('message');
   const bookingFormEl = document.getElementById('booking-form');
   const bookingStatus = document.getElementById('booking-status');
@@ -35,10 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const bookingForm = initBookingForm({
     formEl: bookingFormEl,
     subjectSelect,
-    tutorSelect,
+    daySelect,
     slotSelect,
-    slotTutorField,
-    slotTutorSelect,
     messageInput,
     studentNameInput,
     emailInput,

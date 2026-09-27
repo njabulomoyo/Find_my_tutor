@@ -60,9 +60,8 @@
             <label for="student-name">Student name<input id="student-name" name="studentName" type="text" placeholder="Your full name" required /></label>
             <label for="student-email">Email address<input id="student-email" name="studentEmail" type="email" placeholder="name@grambling.edu" required /></label>
             <label for="subject">Subject you need help with<select id="subject" name="subject" required><option value="">Choose a subject</option></select></label>
-            <label for="booking-tutor">Tutor <span>(optional)</span><select id="booking-tutor" name="tutor" disabled><option value="any">Any tutor</option></select></label>
-            <label for="slot">Available time<select id="slot" name="slot" required disabled><option value="">Choose a subject first</option></select></label>
-            <label for="slot-tutor" id="slot-tutor-field" hidden>Tutor for this time<select id="slot-tutor" name="slotTutor"><option value="any">Any available tutor</option></select></label>
+            <label for="day">Day<select id="day" name="day" required disabled><option value="">Choose a subject first</option></select></label>
+            <label for="slot">Time<select id="slot" name="slot" required disabled><option value="">Choose a day first</option></select></label>
             <label for="message">What would you like help with? <span>(optional)</span><textarea id="message" name="message" rows="3" placeholder="Share a little context before your session..."></textarea></label>
             <button class="btn btn-primary full" type="submit">Request appointment <span aria-hidden="true">→</span></button>
             <p class="form-note" id="booking-status" aria-live="polite">This is a request only. The center will confirm your appointment.</p>

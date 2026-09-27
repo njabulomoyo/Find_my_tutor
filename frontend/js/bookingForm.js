@@ -1,14 +1,12 @@
 import { fetchSlots, submitBooking } from './api.js';
 
+// The server assigns the tutor: whoever is free at the chosen time with the
+// fewest bookings, ties going to the first-listed tutor.
 const ANY_TUTOR = 'any';
 
-function resetSelect(select, placeholder, value = '') {
+function resetSelect(select, placeholder) {
   select.innerHTML = '';
-  select.add(new Option(placeholder, value));
-}
-
-function teaches(tutor, subject) {
-  return tutor.subjects.some((tutorSubject) => tutorSubject.toLowerCase() === subject.toLowerCase());
+  select.add(new Option(placeholder, ''));
 }
 
 function slotValue(slot) {
@@ -19,16 +17,15 @@ export function initBookingForm(fields, getTutors) {
   const {
     formEl,
     subjectSelect,
-    tutorSelect,
+    daySelect,
     slotSelect,
-    slotTutorField,
-    slotTutorSelect,
     messageInput,
     studentNameInput,
     emailInput,
     statusEl,
   } = fields;
 
+  // Open times for the selected subject, fetched once per subject.
   let slots = [];
   let latestSlotRequest = 0;
 
@@ -38,125 +35,83 @@ export function initBookingForm(fields, getTutors) {
     statusEl.classList.toggle('error', kind === 'error');
   }
 
-  // Set when arriving from a tutor's profile ("Request a session").
-  function preselectedTutor() {
-    const tutorId = new URLSearchParams(window.location.search).get('tutor');
-    return getTutors().find((tutor) => String(tutor.id) === tutorId);
-  }
-
   function populateSubjects() {
-    const tutor = preselectedTutor();
-    const sourceTutors = tutor ? [tutor] : getTutors();
-    const subjects = [...new Set(sourceTutors.flatMap((t) => t.subjects))].sort();
-
+    const subjects = [...new Set(getTutors().flatMap((tutor) => tutor.subjects))].sort();
     resetSelect(subjectSelect, 'Choose a subject');
     subjects.forEach((subject) => subjectSelect.add(new Option(subject, subject)));
   }
 
-  function populateTutorFilter() {
-    const subject = subjectSelect.value;
-    resetSelect(tutorSelect, 'Any tutor', ANY_TUTOR);
+  function renderTimes() {
+    const daySlots = slots.filter((slot) => slot.date === daySelect.value);
 
-    if (!subject) {
-      tutorSelect.disabled = true;
-      return;
-    }
-
-    getTutors()
-      .filter((tutor) => teaches(tutor, subject))
-      .forEach((tutor) => tutorSelect.add(new Option(tutor.name, tutor.id)));
-    tutorSelect.disabled = false;
-
-    const tutor = preselectedTutor();
-    if (tutor && teaches(tutor, subject)) {
-      tutorSelect.value = String(tutor.id);
-    }
-  }
-
-  function renderSlots() {
-    const anyTutor = tutorSelect.value === ANY_TUTOR;
-
-    if (slots.length === 0) {
-      resetSelect(slotSelect, 'No open times in the next 2 weeks');
+    if (daySlots.length === 0) {
+      resetSelect(slotSelect, 'Choose a day first');
       slotSelect.disabled = true;
       return;
     }
 
     resetSelect(slotSelect, 'Choose a time');
-    const groups = new Map();
-    slots.forEach((slot) => {
-      if (!groups.has(slot.dateLabel)) {
-        const group = document.createElement('optgroup');
-        group.label = slot.dateLabel;
-        groups.set(slot.dateLabel, group);
-        slotSelect.append(group);
-      }
-
-      const tutorNote = slot.tutors.length === 1 ? slot.tutors[0].name : `${slot.tutors.length} tutors free`;
-      const label = anyTutor ? `${slot.timeLabel} · ${tutorNote}` : slot.timeLabel;
-      groups.get(slot.dateLabel).append(new Option(label, slotValue(slot)));
-    });
+    daySlots.forEach((slot) => slotSelect.add(new Option(slot.timeLabel, slotValue(slot))));
     slotSelect.disabled = false;
+  }
+
+  function renderDays(preferredDay = '') {
+    const days = [...new Map(slots.map((slot) => [slot.date, slot.dateLabel])).entries()];
+
+    if (days.length === 0) {
+      resetSelect(daySelect, 'No open times in the next 2 weeks');
+      daySelect.disabled = true;
+    } else {
+      resetSelect(daySelect, 'Choose a day');
+      days.forEach(([date, label]) => daySelect.add(new Option(label, date)));
+      daySelect.disabled = false;
+      if (days.some(([date]) => date === preferredDay)) {
+        daySelect.value = preferredDay;
+      }
+    }
+
+    renderTimes();
+  }
+
+  async function loadSlots(preferredDay = '') {
+    const subject = subjectSelect.value;
+    const requestId = ++latestSlotRequest;
+    slots = [];
+    daySelect.disabled = true;
+    slotSelect.disabled = true;
+    resetSelect(slotSelect, 'Choose a day first');
+
+    if (!subject) {
+      resetSelect(daySelect, 'Choose a subject first');
+      return;
+    }
+
+    resetSelect(daySelect, 'Loading available days…');
+
+    try {
+      const result = await fetchSlots(subject);
+      if (requestId !== latestSlotRequest) return;
+      slots = result;
+      renderDays(preferredDay);
+    } catch (error) {
+      if (requestId !== latestSlotRequest) return;
+      resetSelect(daySelect, 'Times are unavailable right now');
+      showStatus(error.message, 'error');
+    }
   }
 
   function selectedSlot() {
     return slots.find((slot) => slotValue(slot) === slotSelect.value);
   }
 
-  // "Tutor for this time" only matters when several tutors are free at the chosen time.
-  function updateSlotTutors() {
-    const slot = selectedSlot();
-
-    if (!slot || tutorSelect.value !== ANY_TUTOR || slot.tutors.length < 2) {
-      slotTutorField.hidden = true;
-      return;
-    }
-
-    resetSelect(slotTutorSelect, 'Any available tutor', ANY_TUTOR);
-    slot.tutors.forEach((tutor) => slotTutorSelect.add(new Option(tutor.name, tutor.id)));
-    slotTutorField.hidden = false;
-  }
-
-  async function loadSlots() {
-    const subject = subjectSelect.value;
-    const requestId = ++latestSlotRequest;
-    slots = [];
-    slotTutorField.hidden = true;
-    slotSelect.disabled = true;
-
-    if (!subject) {
-      resetSelect(slotSelect, 'Choose a subject first');
-      return;
-    }
-
-    resetSelect(slotSelect, 'Loading available times…');
-
-    try {
-      const tutorId = tutorSelect.value === ANY_TUTOR ? undefined : tutorSelect.value;
-      const result = await fetchSlots(subject, tutorId);
-      if (requestId !== latestSlotRequest) return;
-      slots = result;
-      renderSlots();
-    } catch (error) {
-      if (requestId !== latestSlotRequest) return;
-      resetSelect(slotSelect, 'Times are unavailable right now');
-      showStatus(error.message, 'error');
-    }
-  }
-
   function resetForm() {
     formEl.reset();
     populateSubjects();
-    populateTutorFilter();
     loadSlots();
   }
 
-  subjectSelect.addEventListener('change', () => {
-    populateTutorFilter();
-    loadSlots();
-  });
-  tutorSelect.addEventListener('change', loadSlots);
-  slotSelect.addEventListener('change', updateSlotTutors);
+  subjectSelect.addEventListener('change', () => loadSlots());
+  daySelect.addEventListener('change', renderTimes);
 
   formEl.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -171,31 +126,26 @@ export function initBookingForm(fields, getTutors) {
       return;
     }
 
-    let tutorId = tutorSelect.value;
-    if (tutorId === ANY_TUTOR && !slotTutorField.hidden) {
-      tutorId = slotTutorSelect.value;
-    }
-
     try {
       const { booking } = await submitBooking({
         studentName,
         email,
         subject,
-        tutorId,
+        tutorId: ANY_TUTOR,
         date: slot.date,
         start: slot.start,
         message: messageInput.value,
       });
 
       showStatus(
-        `Request noted with ${booking.tutorName} for ${slot.dateLabel}, ${slot.timeLabel}. The Student Success Center will confirm your appointment.`,
+        `Booked with ${booking.tutorName} for ${slot.dateLabel}, ${slot.timeLabel}. The Student Success Center will confirm your appointment.`,
         'success'
       );
       resetForm();
     } catch (error) {
       showStatus(error.message, 'error');
       if (error.status === 409) {
-        loadSlots();
+        loadSlots(slot.date);
       }
     }
   });

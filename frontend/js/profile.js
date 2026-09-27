@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('profile-classification').textContent = tutor.classification;
     document.getElementById('profile-subjects').textContent = tutor.subjects.join(', ');
     document.getElementById('profile-availability').textContent = tutor.availability.join(' · ');
-    document.getElementById('booking-link').href = `./index.html?tutor=${encodeURIComponent(tutor.id)}#booking`;
     status.hidden = true;
     content.hidden = false;
   } catch (error) {
