@@ -5,7 +5,7 @@ const tutors = [
     image: null,
     email: 'adube@gsumail.gram.edu',
     major: 'Computer Science & Cloud Computing',
-    classification: 'Senior',
+    classification: 'Junior',
     subjects: ['Pre-Calculus', 'Calculus I', 'Probability and Statistics', 'Data Structures and Algorithms', 'Computer Science I', 'Computer Science II'],
     availability: [
       { day: 'Mon', start: '08:00', end: '09:00' },
@@ -20,7 +20,7 @@ const tutors = [
     image: null,
     email: 'eowoade@gsumail.gram.edu',
     major: 'Computer Engineering',
-    classification: 'Senior',
+    classification: 'Junior',
     subjects: ['Engineering', 'Calculus II','Calculus III', 'Probability and Statistics','Data Structures and Algorithms' ],
     availability: [
       { day: 'Mon', start: '12:00', end: '17:00' },
@@ -36,7 +36,7 @@ const tutors = [
     image: null,
     email: 'mmangund@gsumail.gram.edu',
     major: 'Biology',
-    classification: 'Graduate',
+    classification: 'Senior',
     subjects: ['General Chemistry I','General Chemistry II', 'Biology I','Anatomy and Physiology I', 'Pre-Calculus', 'Calculus I'],
     availability: [
       { day: 'Mon', start: '10:00', end: '12:00' },
@@ -54,7 +54,7 @@ const tutors = [
     image: null,
     email: 'nmoyo@gsumail.gram.edu',
     major: 'Computer Science',
-    classification: 'Senior',
+    classification: 'Junior',
     subjects: ['Computer Science I', 'Computer Science II', 'Data Structures and Algorithms', 'Probability and Statistics', 'Pre-Calculus'],
     availability: [
       { day: 'Mon', start: '10:00', end: '15:00' },
