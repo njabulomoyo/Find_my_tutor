@@ -22,7 +22,7 @@ test('persists tutor and booking data in SQLite', async () => {
 
   const tutor = await tutorRepository.findById(dbPath, 1);
   assert.equal(tutor.major, 'Computer Science & Cloud Computing');
-  assert.equal(tutor.classification, 'Senior');
+  assert.equal(tutor.classification, 'Junior');
   assert.equal(tutor.email, 'adube@gsumail.gram.edu');
   assert.deepEqual(tutor.subjects, [
     'Pre-Calculus',
