@@ -1,8 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const sqlite3 = require('sqlite3').verbose();
-
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, '..', 'data', 'find-my-tutor.db');
+const { DB_PATH } = require('../config');
 
 function openDatabase(filePath = DB_PATH) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });

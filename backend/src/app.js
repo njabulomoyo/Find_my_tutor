@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('node:path');
 const tutorRoutes = require('./routes/tutorRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const slotRoutes = require('./routes/slotRoutes');
+const { CORS_ORIGIN } = require('./config');
 
 function createApp() {
   const app = express();
@@ -9,7 +11,7 @@ function createApp() {
   app.use(express.json());
   app.use(express.static(path.join(__dirname, '../../frontend')));
   app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', CORS_ORIGIN);
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -25,6 +27,7 @@ function createApp() {
   });
   app.use('/api/tutors', tutorRoutes);
   app.use('/api/bookings', bookingRoutes);
+  app.use('/api/slots', slotRoutes);
 
   return app;
 }
